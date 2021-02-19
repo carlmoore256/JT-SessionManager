@@ -63,7 +63,7 @@ void Client::startServer()
 // ===========================================
 //const juce::String& threadName
 
-Client::ClientServer::ClientServer(Client& parentClient) : owner(parentClient), Thread("clientServer")
+Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"), owner(parentClient)
 {
 //	std::string name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage
 	std::string command =
