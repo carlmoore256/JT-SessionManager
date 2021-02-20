@@ -14,6 +14,8 @@
 
 #endif /* Session_hpp */
 
+#define PORT_RNG_START 4464
+
 // main classes which control the session
 
 
@@ -28,12 +30,15 @@ public:
 	
 	void createClient(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage);
 	
-	void findEmptyPort();
+	int findEmptyPort();
 	
 private:
-	std::vector<Client&> mClientList;
+//	std::vector<Client> mClientList;
+	juce::Array<Client*> mAllClients;
 	
 	bool nameExists(juce::String name);
+	
+	bool intExists(int i);
 	
 	juce::String findAlternateName(juce::String name);
 	

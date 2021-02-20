@@ -30,25 +30,34 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	if(nameExists(name))
 		name = findAlternateName(name);
 	
+	if (port == -1) // -1 specified in interface to be no input
+		port = findEmptyPort();
+	
 	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
-	mClientList.push_back(newClient);
+	mAllClients.add(newClient);
 }
 
-void Session::findEmptyPort()
+// finds the lowest value empty port
+int Session::findEmptyPort()
 {
-	for (Client& client : mClientList)
-	{
-		int takenPort = client.getPort();
-	}
+	int emptyPort = PORT_RNG_START;
+	
+	juce::Array<int> takenPorts;
+		
+	for (Client* client : mAllClients)
+		takenPorts.add(client->getPort());
+	
+	while (takenPorts.contains(emptyPort))
+		emptyPort++;
+	
+	return emptyPort;
 }
 
 bool Session::nameExists(juce::String name)
 {
-	for (Client& client : mClientList)
-	{
-		if(client.compareName(name))
+	for (Client* client : mAllClients)
+		if(client->compareName(name))
 			return true;
-	}
 	return false;
 }
 
@@ -62,45 +71,4 @@ juce::String Session::findAlternateName(juce::String name)
 		i++;
 	}
 	return altName;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-juce::String Session::crosscheckName(juce::String name)
-{
-//	bool validName = false;
-//	juce::String newName;
-	
-//	int i = 0;
-	
-//	while (!validName)
-//	{
-//		for (Client& client : mClientList)
-//		{
-//			if(client.compareName(name))
-//			{
-//				name = name + juce::String(" (" + std::to_string(i) + ")");
-//				i++;
-//			} else {
-//				break;
-//			}
-//		}
-//	}
-
-
-	return name;
 }

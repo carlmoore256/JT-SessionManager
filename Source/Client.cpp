@@ -10,9 +10,9 @@
 
 // ===========================================
 
-Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate)
+Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name)
 {
-	mName = name;
+//	mName = name;
 	mPort = port;
 	mChannels = channels;
 	mAutoConnectAudio = autoConnectAudio;
