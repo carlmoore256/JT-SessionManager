@@ -33,6 +33,7 @@ Client::~Client()
 
 bool Client::compareName(juce::String name)
 {
+//	juce::String.compareNatural()
 	auto result = mName.compare(name);
 	return bool(result);
 }

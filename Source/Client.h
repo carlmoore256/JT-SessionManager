@@ -26,6 +26,12 @@ public:
 	
 	~Client();
 	
+	juce::String getName() { return mName; };
+	
+	int getPort() { return mPort; };
+	
+	void setPort();
+	
 	bool compareName(juce::String name);
 	
 	bool checkIfActive();
@@ -33,8 +39,8 @@ public:
 	std::map<std::string, float> getClientStats();
 	
 private:
-	juce::String mName;
-	const std::string threadName = "test";
+	const juce::String mName;
+//	const std::string threadName = "test";
 
 
 	int mPort;

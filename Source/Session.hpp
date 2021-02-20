@@ -31,7 +31,12 @@ public:
 	void findEmptyPort();
 	
 private:
-	std::vector<Client> mClientList;
+	std::vector<Client&> mClientList;
 	
-	bool crosscheckName(juce::String name); // checks if name exists
+	bool nameExists(juce::String name);
+	
+	juce::String findAlternateName(juce::String name);
+	
+	
+//	std::vector<juce::String> existingNames(); // returns vector of all names
 };
