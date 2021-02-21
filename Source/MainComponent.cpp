@@ -4,6 +4,12 @@ MainComponent::MainComponent()
 {
 	addAndMakeVisible(mClientList);
 	addAndMakeVisible(mInfoPanel);
+	
+	addAndMakeVisible(labeltest);
+	labeltest.setFont (juce::Font (16.0f, juce::Font::bold));
+	labeltest.setText("ASJKDHASKJDHAJS", juce::dontSendNotification);
+	labeltest.setColour (juce::Label::textColourId, juce::Colours::white);
+	
 	setSize (1200, 600);
 }
 
@@ -18,18 +24,18 @@ MainComponent::~MainComponent()
 void MainComponent::paint (juce::Graphics& g)
 {
 	g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
+	auto area = getLocalBounds();
+	int childWidth = area.getWidth() / 3;
+	mClientList.setBounds(area.removeFromLeft(childWidth*2));
+	mInfoPanel.setBounds(area.removeFromLeft(childWidth));
 	
-//	mClientList.setBounds(getLocalBounds());
-	int split = (int)(getWidth()/3) * 2;
-	mClientList.setBounds(0, 0, split, getHeight());
-	mInfoPanel.setBounds(split, 0, getWidth(), getHeight());
+//	DBG(mClientList.getSelection(<#const int rowNumber#>))
 }
 
 void MainComponent::resized()
 {
-	// This is called when the MainComponent is resized.
-	// If you add any child components, this is where you should
-	// update their positions.
+	labeltest.setBounds(0, 0, getWidth()-20, 30);
+//	mInfoPanel.setBounds(split, 0, getWidth(), getHeight());
 }
 
 //=============================================================

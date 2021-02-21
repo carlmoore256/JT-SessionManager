@@ -26,9 +26,16 @@ public:
 	
 	void AddClient();
 	
+//	void selectedRowsChanged(int lastRowSelected) override;
+	
 	int getNumRows() override;
 	
 	void resized() override;
+	
+	void selectedRowsChanged (int lastRowSelected) override
+	{
+		DBG(lastRowSelected);
+	}
 	
 	void paintRowBackground (juce::Graphics&, int, int, int, bool) override;
 	
@@ -77,6 +84,7 @@ public:
 		return nullptr;     // [10]
 	};
 	
+
 private:
 	juce::TableListBox mTable { {}, this };
 	juce::Font font { 14.0f };

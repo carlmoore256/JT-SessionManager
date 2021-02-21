@@ -10,6 +10,7 @@
 
 ClientList::ClientList()
 {
+	
 	loadData();
 	addAndMakeVisible (mTable);
 
