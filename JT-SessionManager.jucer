@@ -4,6 +4,12 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="IZtzWx" name="JT-SessionManager">
     <GROUP id="{2EF1699F-F794-E625-08C8-A8846EDD21DB}" name="Source">
+      <FILE id="FwRz1n" name="InfoPanel.cpp" compile="1" resource="0" file="Source/InfoPanel.cpp"/>
+      <FILE id="lWcQ7E" name="InfoPanel.hpp" compile="0" resource="0" file="Source/InfoPanel.hpp"/>
+      <FILE id="bMLCmW" name="Section.cpp" compile="1" resource="0" file="Source/Section.cpp"/>
+      <FILE id="D3uAwb" name="Section.hpp" compile="0" resource="0" file="Source/Section.hpp"/>
+      <FILE id="JNFM2t" name="Session.cpp" compile="1" resource="0" file="Source/Session.cpp"/>
+      <FILE id="BT77zv" name="Session.hpp" compile="0" resource="0" file="Source/Session.hpp"/>
       <FILE id="w6noQi" name="Client.cpp" compile="1" resource="0" file="Source/Client.cpp"/>
       <FILE id="x5rOvM" name="Client.h" compile="0" resource="0" file="Source/Client.h"/>
       <FILE id="qbgRUq" name="ClientList.cpp" compile="1" resource="0" file="Source/ClientList.cpp"/>

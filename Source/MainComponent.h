@@ -2,6 +2,7 @@
 
 #include <JuceHeader.h>
 #include "ClientList.h"
+#include "InfoPanel.hpp"
 
 
 //#endif /* ClientList_hpp */
@@ -21,7 +22,9 @@ public:
 
 private:
 	ClientList mClientList;
+	InfoPanel mInfoPanel;
+	
+	juce::Rectangle<int> test;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
-
 
