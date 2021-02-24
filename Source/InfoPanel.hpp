@@ -4,14 +4,15 @@
 //
 //  Created by Carl Moore on 2/19/21.
 //
+#pragma once
 
-#ifndef InfoPanel_hpp
-#define InfoPanel_hpp
+//#ifndef InfoPanel_hpp
+//#define InfoPanel_hpp
 #include <JuceHeader.h>
 #include <stdio.h>
 #include "Section.hpp"
 
-#endif /* InfoPanel_hpp */
+//#endif /* InfoPanel_hpp */
 
 
 

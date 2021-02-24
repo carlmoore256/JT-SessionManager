@@ -4,12 +4,7 @@ MainComponent::MainComponent()
 {
 	addAndMakeVisible(mClientList);
 	addAndMakeVisible(mInfoPanel);
-	
-	addAndMakeVisible(labeltest);
-	labeltest.setFont (juce::Font (16.0f, juce::Font::bold));
-	labeltest.setText("ASJKDHASKJDHAJS", juce::dontSendNotification);
-	labeltest.setColour (juce::Label::textColourId, juce::Colours::white);
-	
+		
 	setSize (1200, 600);
 }
 
@@ -34,7 +29,6 @@ void MainComponent::paint (juce::Graphics& g)
 
 void MainComponent::resized()
 {
-	labeltest.setBounds(0, 0, getWidth()-20, 30);
 //	mInfoPanel.setBounds(split, 0, getWidth(), getHeight());
 }
 

@@ -4,16 +4,17 @@
 //
 //  Created by Carl Moore on 2/17/21.
 //
-//#pragma once
+#pragma once
 
-#ifndef ClientList_h
-#define ClientList_h
+//#ifndef ClientList_h
+//#define ClientList_h
 
 #include <JuceHeader.h>
 #include <stdio.h>
-#include "Client.h"
+//#include "Client.h"
+#include "Session.hpp"
 
-#endif /* ClientList_h */
+//#endif /* ClientList_h */
 
 
 class ClientList : public juce::Component,
@@ -34,7 +35,7 @@ public:
 	
 	void selectedRowsChanged (int lastRowSelected) override
 	{
-		DBG(lastRowSelected);
+		mNewSelection = true;
 	}
 	
 	void paintRowBackground (juce::Graphics&, int, int, int, bool) override;
@@ -84,8 +85,15 @@ public:
 		return nullptr;     // [10]
 	};
 	
+	
+	void checkIfNewSelection();
+	
 
 private:
+//	Session& mSession;
+	
+	bool mNewSelection;
+	
 	juce::TableListBox mTable { {}, this };
 	juce::Font font { 14.0f };
 	

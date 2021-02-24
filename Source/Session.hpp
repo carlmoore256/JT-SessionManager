@@ -1,22 +1,25 @@
 //
 //  Session.hpp
 //  JT-SessionManager - App
-//
+//  main class that controls the session
 //  Created by Carl Moore on 2/18/21.
-//
+#pragma once
 
-#ifndef Session_hpp
-#define Session_hpp
+//#ifndef Session_hpp
+//#define Session_hpp
 
 #include <stdio.h>
 #include <JuceHeader.h>
+
+#include "ClientList.h"
+#include "InfoPanel.hpp"
 #include "Client.h"
 
-#endif /* Session_hpp */
+
+//#endif /* Session_hpp */s
 
 #define PORT_RNG_START 4464
 
-// main classes which control the session
 
 
 class Session : public juce::Component
@@ -33,6 +36,8 @@ public:
 	int findEmptyPort();
 	
 private:
+	ClientList clientList;
+	InfoPanel infoPanel;
 //	std::vector<Client> mClientList;
 	juce::Array<Client*> mAllClients;
 	

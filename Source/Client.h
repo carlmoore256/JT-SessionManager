@@ -4,16 +4,17 @@
 //
 //  Created by Carl Moore on 2/17/21.
 //
+#pragma once
 
-#ifndef Client_hpp
-#define Client_hpp
+//#ifndef Client_hpp
+//#define Client_hpp
 
 #include <stdio.h>
 #include <JuceHeader.h>
 //#include <thread>
 //#include "boost/process.hpp"
 
-#endif /* Client_hpp */
+//#endif /* Client_hpp */
 
 // ===========================================
 

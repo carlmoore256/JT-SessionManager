@@ -4,14 +4,15 @@
 //
 //  Created by Carl Moore on 2/19/21.
 //
-
-#ifndef Section_hpp
-#define Section_hpp
+#pragma once
+//
+//#ifndef Section_hpp
+//#define Section_hpp
 
 #include <JuceHeader.h>
 #include <stdio.h>
 
-#endif /* Section_hpp */
+//#endif /* Section_hpp */
 
 class Section : public juce::Component
 {

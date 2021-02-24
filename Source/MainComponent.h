@@ -26,7 +26,6 @@ private:
 	
 	juce::Rectangle<int> test;
 	
-	juce::Label labeltest;
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
 

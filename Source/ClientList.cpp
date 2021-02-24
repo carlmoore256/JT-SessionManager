@@ -132,6 +132,15 @@ void ClientList::setText(const int columnNumber, const int rowNumber, const juce
 	mDataList->getChildElement (rowNumber)->setAttribute (columnName, newText);
 }
 
+void ClientList::checkIfNewSelection()
+{
+//	return mNewSelection;
+	mNewSelection = false;
+}
+
+
+// ====== PRIVATE ========
+
 void ClientList::loadData()
 {
 	//	auto dir = juce::File::getCurrentWorkingDirectory();
