@@ -12,7 +12,7 @@
 #include <JuceHeader.h>
 #include <stdio.h>
 //#include "Client.h"
-#include "Session.hpp"
+//#include "Session.hpp"
 
 //#endif /* ClientList_h */
 

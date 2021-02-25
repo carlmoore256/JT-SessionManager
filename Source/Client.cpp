@@ -12,7 +12,6 @@
 
 Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name)
 {
-//	mName = name;
 	mPort = port;
 	mChannels = channels;
 	mAutoConnectAudio = autoConnectAudio;
@@ -28,7 +27,7 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 
 Client::~Client()
 {
-//	delete mClientServer;
+	delete mClientServer;
 }
 
 bool Client::compareName(juce::String name)
@@ -66,16 +65,31 @@ void Client::startServer()
 
 Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"), owner(parentClient)
 {
+	DBG("STARTING SERVER!");
 //	std::string name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage
-	std::string command =
-		"jacktrip -c --clientname " + parentClient.mName.toStdString() +
+	int portOffset = parentClient.mPort;
+	juce::String command =
+		"jacktrip"
 		" -n " + std::to_string(parentClient.mChannels) +
-		" -o " + std::to_string(parentClient.mPort - 4464) +
+		" -s " +
+		"--clientname " + parentClient.mName.toStdString() +
+		" -o " + std::to_string(portOffset) +
 		" --iostat 1";
 	
+	command = "jacktrip --help";
+	
+	std::cout << command + "\n";
 //	Will return false if not started, create a loop for this
-	childProcess.start(command);
-		
+	childProcess.start(command, wantStdOut);
+//	childProcess.waitForProcessToFinish(10000);
+//	mThread.startThread();
+	
+	for (int i = 0; i < 100000; i++)
+	{
+		std::cout << childProcess.readAllProcessOutput();
+		sleep(10);
+
+	}
 }
 
 
@@ -89,6 +103,7 @@ void Client::ClientServer::run()
 	while(!threadShouldExit())
 	{
 		DBG("RUNNING!");
+//		childProcess.readProcessOutput();
 		wait(500);
 	}
 }
@@ -98,10 +113,10 @@ bool Client::ClientServer::isRunning()
 	return childProcess.isRunning();
 }
 
-void Client::ClientServer::runCommand(std::string command)
-{
-//	system
-}
+//void Client::ClientServer::runCommand(std::string command)
+//{
+////	system
+//}
 
 void Client::ClientServer::terminateServer()
 {

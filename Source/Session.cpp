@@ -9,7 +9,7 @@
 
 Session::Session()
 {
-	
+	createClient("test", 0, 1, true, true, true);
 }
 
 Session::~Session()
@@ -33,8 +33,8 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	if (port == -1) // -1 specified in interface to be no input
 		port = findEmptyPort();
 	
-	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
-	mAllClients.add(newClient);
+	Client newClient(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
+	mAllClients.add(&newClient);
 }
 
 // finds the lowest value empty port
@@ -43,9 +43,12 @@ int Session::findEmptyPort()
 	int emptyPort = PORT_RNG_START;
 	
 	juce::Array<int> takenPorts;
-		
+	
+//	for (int i = 0; i<mAllClients.size(); i++)
+//		takenPorts.add(mAllClients[i].getPort());
 	for (Client* client : mAllClients)
-		takenPorts.add(client->getPort());
+		takenPorts.add(client -> getPort());
+	
 	
 	while (takenPorts.contains(emptyPort))
 		emptyPort++;
@@ -55,8 +58,11 @@ int Session::findEmptyPort()
 
 bool Session::nameExists(juce::String name)
 {
+//	for (int i = 0; i<mAllClients.size(); i++)
+//		if(mAllClients[i].compareName(name))
+//			return true;
 	for (Client* client : mAllClients)
-		if(client->compareName(name))
+		if(client -> compareName(name))
 			return true;
 	return false;
 }

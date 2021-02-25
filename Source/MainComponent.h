@@ -3,6 +3,7 @@
 #include <JuceHeader.h>
 #include "ClientList.h"
 #include "InfoPanel.hpp"
+#include "Session.hpp"
 
 
 //#endif /* ClientList_hpp */
@@ -23,6 +24,7 @@ public:
 private:
 	ClientList mClientList;
 	InfoPanel mInfoPanel;
+	Session mSession;
 	
 	juce::Rectangle<int> test;
 	
