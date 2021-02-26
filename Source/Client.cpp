@@ -68,34 +68,7 @@ void Client::startServer()
 //const juce::String& threadName
 
 Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"), owner(parentClient)
-{
-	
-	int portOffset = parentClient.mPort;
-	juce::String command =
-		"/usr/local/bin/jacktrip"
-		" -n " + juce::String(parentClient.mChannels) +
-		" -s " +
-		"--clientname " + parentClient.mName +
-		" -o " + juce::String(portOffset) +
-		" --iostat 1";
-
-	
-	command = "jacktrip --help";
-	
-	std::cout << command + "\n";
-//	Will return false if not started, create a loop for this
-	childProcess.start(command, wantStdOut);
-//	childProcess.waitForProcessToFinish(10000);
-//	mThread.startThread();
-	
-//	for (int i = 0; i < 100000; i++)
-//	{
-//		std::cout << childProcess.readAllProcessOutput();
-//		sleep(10);
-//
-//	}
-
-}
+{}
 
 
 Client::ClientServer::~ClientServer()
@@ -140,12 +113,26 @@ bool Client::ClientServer::isRunning()
 	return childProcess.isRunning();
 }
 
+juce::String Client::ClientServer::generateCommand()
+{
+	juce::String command =
+	"/usr/local/bin/jacktrip"
+	" -n " + juce::String(owner.mChannels) +
+	" -s " +
+	"--clientname " + owner.mName +
+	" -o " + juce::String(owner.mPort) +
+	" --iostat 1";
+	
+	return command;
+}
+
 
 void Client::ClientServer::startServer()
 {
 	DBG("attempting to start server");
 	
-	if(childProcess.start (mCommand, wantStdOut | wantStdErr))
+	
+	if(childProcess.start (generateCommand(), wantStdOut | wantStdErr))
 	{
 		DBG("server opened");
 		mProcessRunning = true;

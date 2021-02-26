@@ -73,13 +73,13 @@ private:
 		Client& owner;
 //		juce::Thread& serverThread;
 		
-		juce::String mCommand;
-				
 		ChildProcess childProcess;
 	//	std::thread* mServerThread;
 		
 		bool mProcessRunning;
 		bool mAllowRestart = true;
+		
+		juce::String generateCommand();
 		
 		//	---metrics---
 		float mQuality;
