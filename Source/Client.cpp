@@ -84,12 +84,12 @@ Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"
 //	childProcess.waitForProcessToFinish(10000);
 //	mThread.startThread();
 	
-	for (int i = 0; i < 100000; i++)
-	{
-		std::cout << childProcess.readAllProcessOutput();
-		sleep(10);
-
-	}
+//	for (int i = 0; i < 100000; i++)
+//	{
+//		std::cout << childProcess.readAllProcessOutput();
+//		sleep(10);
+//
+//	}
 }
 
 
