@@ -41,7 +41,7 @@ bool Client::compareName(juce::String name)
 
 bool Client::checkIfActive()
 {
-	return false;
+	return mClientServer->isRunning();
 }
 
 std::map<std::string, float> Client::getClientStats()
@@ -76,6 +76,11 @@ Client::ClientServer::~ClientServer()
 //	stopServer();
 }
 
+bool Client::ClientServer::isRunning()
+{
+	return childProcess.isRunning();
+}
+
 void Client::ClientServer::run()
 {
 	
@@ -103,14 +108,11 @@ void Client::ClientServer::run()
 		}
 //
 		wait(300);
+		
+//		add restart timeout stuff here
 	}
 	
 	stopServer();
-}
-
-bool Client::ClientServer::isRunning()
-{
-	return childProcess.isRunning();
 }
 
 juce::String Client::ClientServer::generateCommand()
