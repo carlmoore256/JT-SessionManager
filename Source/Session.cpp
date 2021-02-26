@@ -14,7 +14,7 @@ Session::Session()
 
 Session::~Session()
 {
-	
+    freeClients();
 }
 void Session::saveSession()
 {
@@ -33,14 +33,15 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	if (port == -1) // -1 specified in interface to be no input
 		port = findEmptyPort();
 	
-	Client newClient(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
-	
-	testClient = &newClient;
-	DBG(testClient->getName() + " TESTT \n");
-//	Client newClient(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
-//	testClient = newClient;
-	
-	mAllClients.add(&newClient);
+
+	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
+	mAllClients.add(newClient);
+}
+
+void Session::freeClients()
+{
+    for (Client* client : mAllClients)
+        delete client;
 }
 
 // finds the lowest value empty port

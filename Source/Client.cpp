@@ -71,7 +71,7 @@ Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"
 {
 	
 	int portOffset = parentClient.mPort;
-	mCommand =
+	juce::String command =
 		"/usr/local/bin/jacktrip"
 		" -n " + juce::String(parentClient.mChannels) +
 		" -s " +
@@ -79,8 +79,22 @@ Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"
 		" -o " + juce::String(portOffset) +
 		" --iostat 1";
 
+	
+	command = "jacktrip --help";
+	
+	std::cout << command + "\n";
+//	Will return false if not started, create a loop for this
+	childProcess.start(command, wantStdOut);
 //	childProcess.waitForProcessToFinish(10000);
-//	this->startThread();
+//	mThread.startThread();
+	
+//	for (int i = 0; i < 100000; i++)
+//	{
+//		std::cout << childProcess.readAllProcessOutput();
+//		sleep(10);
+//
+//	}
+
 }
 
 

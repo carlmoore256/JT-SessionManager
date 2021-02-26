@@ -32,6 +32,8 @@ public:
 	void loadSession();
 	
 	void createClient(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage);
+    
+    void freeClients();
 	
 	int findEmptyPort();
 	
