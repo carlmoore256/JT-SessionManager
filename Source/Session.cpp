@@ -34,6 +34,12 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 		port = findEmptyPort();
 	
 	Client newClient(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
+	
+	testClient = &newClient;
+	DBG(testClient->getName() + " TESTT \n");
+//	Client newClient(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
+//	testClient = newClient;
+	
 	mAllClients.add(&newClient);
 }
 
@@ -54,6 +60,12 @@ int Session::findEmptyPort()
 		emptyPort++;
 	
 	return emptyPort;
+}
+
+void Session::checkTestClient()
+{
+	DBG("CHECKING CLIENT!");
+	DBG(testClient->getName());
 }
 
 bool Session::nameExists(juce::String name)

@@ -57,7 +57,7 @@ private:
 	
 	// manages the running jacktrip thread
 	class ClientServer : public juce::ChildProcess,
-						 private juce::Thread
+						 public juce::Thread
 //	private juce::Listener
 	{
 	public:
@@ -73,21 +73,21 @@ private:
 		Client& owner;
 //		juce::Thread& serverThread;
 		
-//		juce::Thread mThread;
-		
+		juce::String mCommand;
+				
 		ChildProcess childProcess;
 	//	std::thread* mServerThread;
 		
-		
+		bool mProcessRunning;
+		bool mAllowRestart = true;
 		
 		//	---metrics---
 		float mQuality;
 		int mSkew;
 		
+		void startServer();
+		void stopServer();
 		void filterOutput();
-//		void runCommand(std::string command);
-	//	void startServer();
-		void terminateServer();
 	};
 	
 	ClientServer* mClientServer;

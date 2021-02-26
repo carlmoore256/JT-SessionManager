@@ -35,11 +35,15 @@ public:
 	
 	int findEmptyPort();
 	
+	void checkTestClient();
+	
 private:
 	ClientList clientList;
 	InfoPanel infoPanel;
 //	std::vector<Client> mClientList;
 	juce::Array<Client*> mAllClients;
+	
+	Client* testClient;
 	
 	bool nameExists(juce::String name);
 	
