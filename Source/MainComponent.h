@@ -1,13 +1,17 @@
-#pragma once
+//#include "JT-SessionManager.h"
+
+#ifndef MainComponent_h
+#define MainComponent_h
 
 #include <JuceHeader.h>
+//#include <stdio.h>
+//
+//#include "Client.h"
 #include "ClientList.h"
 #include "InfoPanel.hpp"
-#include "Session.hpp"
 #include "Section.hpp"
-
-
-//#endif /* ClientList_hpp */
+#include "Session.hpp"
+//#include "SignalRouter.h"
 
 //	put all your controls and content here
 
@@ -41,3 +45,4 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
 
+#endif /* MainComponent_h */

@@ -4,20 +4,25 @@
               addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="IZtzWx" name="JT-SessionManager">
     <GROUP id="{2EF1699F-F794-E625-08C8-A8846EDD21DB}" name="Source">
-      <FILE id="FwRz1n" name="InfoPanel.cpp" compile="1" resource="0" file="Source/InfoPanel.cpp"/>
-      <FILE id="lWcQ7E" name="InfoPanel.hpp" compile="0" resource="0" file="Source/InfoPanel.hpp"/>
-      <FILE id="bMLCmW" name="Section.cpp" compile="1" resource="0" file="Source/Section.cpp"/>
-      <FILE id="D3uAwb" name="Section.hpp" compile="0" resource="0" file="Source/Section.hpp"/>
-      <FILE id="JNFM2t" name="Session.cpp" compile="1" resource="0" file="Source/Session.cpp"/>
-      <FILE id="BT77zv" name="Session.hpp" compile="0" resource="0" file="Source/Session.hpp"/>
       <FILE id="w6noQi" name="Client.cpp" compile="1" resource="0" file="Source/Client.cpp"/>
       <FILE id="x5rOvM" name="Client.h" compile="0" resource="0" file="Source/Client.h"/>
       <FILE id="qbgRUq" name="ClientList.cpp" compile="1" resource="0" file="Source/ClientList.cpp"/>
       <FILE id="w1f2KI" name="ClientList.h" compile="0" resource="0" file="Source/ClientList.h"/>
+      <FILE id="FwRz1n" name="InfoPanel.cpp" compile="1" resource="0" file="Source/InfoPanel.cpp"/>
+      <FILE id="lWcQ7E" name="InfoPanel.hpp" compile="0" resource="0" file="Source/InfoPanel.hpp"/>
+      <FILE id="qiGxUG" name="JT-SessionManager.h" compile="0" resource="0"
+            file="Source/JT-SessionManager.h"/>
       <FILE id="zQGfyC" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
-      <FILE id="b9Z87J" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
       <FILE id="b5nhQ3" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
+      <FILE id="b9Z87J" name="MainComponent.h" compile="0" resource="0" file="Source/MainComponent.h"/>
+      <FILE id="bMLCmW" name="Section.cpp" compile="1" resource="0" file="Source/Section.cpp"/>
+      <FILE id="D3uAwb" name="Section.hpp" compile="0" resource="0" file="Source/Section.hpp"/>
+      <FILE id="JNFM2t" name="Session.cpp" compile="1" resource="0" file="Source/Session.cpp"/>
+      <FILE id="BT77zv" name="Session.hpp" compile="0" resource="0" file="Source/Session.hpp"/>
+      <FILE id="yUbNVB" name="SignalRouter.cpp" compile="1" resource="0"
+            file="Source/SignalRouter.cpp"/>
+      <FILE id="p7e4Cl" name="SignalRouter.h" compile="0" resource="0" file="Source/SignalRouter.h"/>
     </GROUP>
   </MAINGROUP>
   <JUCEOPTIONS JUCE_STRICT_REFCOUNTEDPOINTER="1"/>

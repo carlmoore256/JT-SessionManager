@@ -4,17 +4,20 @@
 //
 //  Created by Carl Moore on 2/17/21.
 //
-#pragma once
 
-//#ifndef ClientList_h
-//#define ClientList_h
+//#include "JT-SessionManager.h"
+
+#ifndef ClientList_h
+#define ClientList_h
 
 #include <JuceHeader.h>
-#include <stdio.h>
+//#include <stdio.h>
+//
 //#include "Client.h"
+//#include "InfoPanel.hpp"
+//#include "Section.hpp"
 //#include "Session.hpp"
-
-//#endif /* ClientList_h */
+//#include "SignalRouter.h"
 
 
 class ClientList : public juce::Component,
@@ -203,3 +206,5 @@ private:
 	juce::String getAttributeNameForColumnId (const int columnId) const;
 
 };
+
+#endif /* ClientList_h */

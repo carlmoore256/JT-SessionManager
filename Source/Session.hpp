@@ -3,24 +3,22 @@
 //  JT-SessionManager - App
 //  main class that controls the session
 //  Created by Carl Moore on 2/18/21.
-#pragma once
 
-//#ifndef Session_hpp
-//#define Session_hpp
+//#include "JT-SessionManager.h"
 
-#include <stdio.h>
+#ifndef Session_hpp
+#define Session_hpp
+
 #include <JuceHeader.h>
-
+//#include <stdio.h>
+//
+#include "Client.h"
 #include "ClientList.h"
 #include "InfoPanel.hpp"
-#include "Client.h"
-
-
-//#endif /* Session_hpp */s
+//#include "Section.hpp"
+//#include "SignalRouter.h"
 
 #define PORT_RNG_START 4464
-
-
 
 class Session : public juce::Component
 {
@@ -57,3 +55,5 @@ private:
 	
 //	std::vector<juce::String> existingNames(); // returns vector of all names
 };
+
+#endif /* Session_hpp */

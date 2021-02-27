@@ -4,15 +4,20 @@
 //
 //  Created by Carl Moore on 2/19/21.
 //
-#pragma once
-//
-//#ifndef Section_hpp
-//#define Section_hpp
+
+//#include "JT-SessionManager.h"
+
+#ifndef Section_hpp
+#define Section_hpp
 
 #include <JuceHeader.h>
-#include <stdio.h>
-
-//#endif /* Section_hpp */
+//#include <stdio.h>
+//
+//#include "Client.h"
+//#include "ClientList.h"
+//#include "InfoPanel.hpp"
+//#include "Session.hpp"
+//#include "SignalRouter.h"
 
 class Section : public juce::Component
 {
@@ -90,5 +95,4 @@ private:
 
 };
 
-
-
+#endif /* Section_hpp */

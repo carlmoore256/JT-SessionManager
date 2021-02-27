@@ -4,17 +4,20 @@
 //
 //  Created by Carl Moore on 2/19/21.
 //
-#pragma once
 
-//#ifndef InfoPanel_hpp
-//#define InfoPanel_hpp
+//#include "JT-SessionManager.h"
+
+#ifndef InfoPanel_hpp
+#define InfoPanel_hpp
+
 #include <JuceHeader.h>
-#include <stdio.h>
-#include "Section.hpp"
+//#include <stdio.h>
+//
 //#include "Client.h"
-
-//#endif /* InfoPanel_hpp */
-
+//#include "ClientList.h"
+#include "Section.hpp"
+//#include "Session.hpp"
+//#include "SignalRouter.h"
 
 
 class InfoPanel : public Section
@@ -23,7 +26,7 @@ class InfoPanel : public Section
 public:
 	InfoPanel(int padding = 15, int innerPadding = 5);
 	~InfoPanel();
-	
+	    
 	void updateInfoDisplay(juce::String name, bool isConnected, int port, int skew, float quality);
 	
 	void clearInfoDisplay();
@@ -57,5 +60,4 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InfoPanel)
 };
 
-
-
+#endif /* InfoPanel_hpp */

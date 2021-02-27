@@ -4,17 +4,20 @@
 //
 //  Created by Carl Moore on 2/17/21.
 //
-#pragma once
 
-//#ifndef Client_hpp
-//#define Client_hpp
+//#include "JT-SessionManager.h"
 
-#include <stdio.h>
+#ifndef Client_h
+#define Client_h
+
 #include <JuceHeader.h>
-//#include <thread>
-//#include "boost/process.hpp"
-
-//#endif /* Client_hpp */
+//#include <stdio.h>
+//
+//#include "ClientList.h"
+//#include "InfoPanel.hpp"
+//#include "Section.hpp"
+//#include "Session.hpp"
+//#include "SignalRouter.h"
 
 // ===========================================
 
@@ -92,3 +95,5 @@ private:
 	
 	ClientServer* mClientServer;
 };
+
+#endif /* Client_h */
