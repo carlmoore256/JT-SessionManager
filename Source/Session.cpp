@@ -9,8 +9,11 @@
 
 Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip)
 {
+    mSignalRouter.setSource("system");
+    
 	createClient("test", 0, 1, true, true, true);
-    connectSignals();
+    connectClientSignals();
+    connectHostSignals();
 }
 
 Session::~Session()
@@ -71,7 +74,8 @@ int Session::findEmptyPort()
 	return emptyPort;
 }
 
-void Session::connectSignals()
+// call this when all clients have been connected to their server
+void Session::connectClientSignals()
 {
     // nested for loops to run through mAllClients, pull up each one's signal router
     // - inner loop makes connections to all other entries in mAllClients. use thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.connect();
@@ -87,11 +91,36 @@ void Session::connectSignals()
     DBG("signal connection");
 }
 
-void Session::disconnectSignals()
+void Session::disconnectClientSignals()
 {
     // run through all clients, check the contents of each client's mSignalDestinations array
     //  - disconnect from each destination with thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.disconnect()
     //  - remove each destination from mSignalDestinations
+}
+
+// call this when all clients have been connected to their server
+void Session::connectHostSignals()
+{
+    // nested for loops to run through mAllClients, pull up each one's signal router
+    // - inner loop makes connections to all other entries in mAllClients. use thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.connect();
+    // - add connected clients to thisClient.mSignalDestinations as we go
+    
+    // test one client
+    Client* thisClient = mAllClients[0];
+    
+    mSignalRouter.setDest(thisClient->getName());
+    mSignalRouter.connect();
+}
+
+void Session::disconnectHostSignals()
+{
+    // run through all clients, check the contents of each client's mSignalDestinations array
+    //  - disconnect from each destination with thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.disconnect()
+    //  - remove each destination from mSignalDestinations
+    Client* thisClient = mAllClients[0];
+    
+    mSignalRouter.setDest(thisClient->getName());
+    mSignalRouter.disconnect();
 }
 
 bool Session::nameExists(juce::String name)

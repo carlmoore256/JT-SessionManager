@@ -14,7 +14,7 @@
 #include "ClientList.h"
 #include "InfoPanel.hpp"
 //#include "Section.hpp"
-//#include "SignalRouter.h"
+#include "SignalRouter.h"
 
 #define PORT_RNG_START 4464
 
@@ -34,10 +34,6 @@ public:
     void freeClients();
 	
 	int findEmptyPort();
-    
-    void connectSignals();
-    void disconnectSignals();
-
 		
 private:
 	ClientList* mClientList;
@@ -53,7 +49,13 @@ private:
 	
 	juce::String findAlternateName(juce::String name);
 	
-	
+    SignalRouter mSignalRouter;
+
+    void connectClientSignals();
+    void disconnectClientSignals();
+    void connectHostSignals();
+    void disconnectHostSignals();
+
 //	std::vector<juce::String> existingNames(); // returns vector of all names
 };
 

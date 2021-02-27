@@ -17,9 +17,9 @@ SignalRouter::~SignalRouter()
 }
 
 //=================================
-void SignalRouter::setClient(juce::String c)
+void SignalRouter::setSource(juce::String s)
 {
-    mClient = c;
+    mSource = s;
 }
 
 void SignalRouter::setDest(juce::String d)
