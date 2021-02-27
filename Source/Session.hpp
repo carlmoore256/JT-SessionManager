@@ -25,8 +25,10 @@
 class Session : public juce::Component
 {
 public:
-	Session();
+	Session(ClientList* cl, InfoPanel* ip);
 	~Session();
+	
+	void update();
 	
 	void saveSession();
 	void loadSession();
@@ -36,11 +38,12 @@ public:
     void freeClients();
 	
 	int findEmptyPort();
+	
 		
 private:
-	ClientList clientList;
-	InfoPanel infoPanel;
-//	std::vector<Client> mClientList;
+	ClientList* mClientList;
+	InfoPanel* mInfoPanel;
+	
 	juce::Array<Client*> mAllClients;
 	
 	Client* testClient;

@@ -94,34 +94,41 @@ juce::Array<juce::Rectangle<int>> Section::getContainerCells(juce::Rectangle<int
 	int cellWidth = area.getWidth() / div_x;
 	int cellHeight = area.getHeight() / div_y;
 	
-//	FIX THIS SO THAT ROWS ARE CREATED FIRST
-//	for (int y=0; y<div_y; y++)
-//	{
-//		juce::Rectangle<int> row = area;
-//
-//		row.removeFromTop(cellHeight * (div_y - (y + 1)));
-////		row.removeFromBott
-////		row.removeFromBottom(cellHeight * (div_y * (div_y - y)));
-//
-//	}
 	
-	for(int i = 0; i < div_x; i++)
+	juce::Rectangle<int> row = area;
+	//	get a single row
+	row.removeFromBottom(cellHeight*(div_y-1));
+	
+	//	ROWS ARE CREATED FIRST
+	for (int y=0; y<div_y; y++)
 	{
-		juce::Rectangle<int> thisColumn = area;
-
-		thisColumn.removeFromRight(cellWidth * (div_x - (i + 1)));
-		thisColumn.removeFromLeft(cellWidth * i);
-		
-		for(int j = 0; j < div_y; j++)
+		for (int x=0; x<div_x; x++)
 		{
-			juce::Rectangle<int> thisCell = thisColumn;
-			thisCell.removeFromTop(j * cellHeight);
-			thisCell.setHeight(cellHeight);
-			thisCell.reduce(innerPad_x, innerPad_y);
-			
-			cells.add(thisCell);
+			juce::Rectangle<int> cell = row;
+			cell.removeFromLeft(x * cellWidth);
+			cell.removeFromRight((div_x - x - 1) * cellWidth);
+			cells.add(cell);
 		}
+		row.translate(0, cellHeight);
 	}
+	
+//	for(int i = 0; i < div_x; i++)
+//	{
+//		juce::Rectangle<int> thisColumn = area;
+//
+//		thisColumn.removeFromRight(cellWidth * (div_x - (i + 1)));
+//		thisColumn.removeFromLeft(cellWidth * i);
+//
+//		for(int j = 0; j < div_y; j++)
+//		{
+//			juce::Rectangle<int> thisCell = thisColumn;
+//			thisCell.removeFromTop(j * cellHeight);
+//			thisCell.setHeight(cellHeight);
+//			thisCell.reduce(innerPad_x, innerPad_y);
+//
+//			cells.add(thisCell);
+//		}
+//	}
 	return cells;
 }
 
@@ -129,3 +136,14 @@ void Section::updateSectionCells(juce::Rectangle<int> container)
 {
 	sectionCells = getContainerCells(container, mDivX, mDivY, mPadX, mPadY, mInnerPadX, mInnerPadY);
 }
+
+
+
+//	returns an array of rectangles within the row index
+//	juce::Rectangle<int> getRowCells(int index)
+//	{
+//		juce::Array<juce::Rectangle<int>> row;
+//		for (int i = 0; i < mDivX; i++)
+//			row[i] = containerCells[index + i];
+//		return row;
+//	}

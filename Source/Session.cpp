@@ -7,7 +7,7 @@
 
 #include "Session.hpp"
 
-Session::Session()
+Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip)
 {
 	createClient("test", 0, 1, true, true, true);
 }
@@ -23,6 +23,11 @@ void Session::saveSession()
 void Session::loadSession()
 {
 	
+}
+
+void Session::update()
+{
+	int selectedClient = mClientList->getLatestSelection();
 }
 
 void Session::createClient(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage)
@@ -51,8 +56,6 @@ int Session::findEmptyPort()
 	
 	juce::Array<int> takenPorts;
 	
-//	for (int i = 0; i<mAllClients.size(); i++)
-//		takenPorts.add(mAllClients[i].getPort());
 	for (Client* client : mAllClients)
 		takenPorts.add(client -> getPort());
 	
@@ -65,9 +68,6 @@ int Session::findEmptyPort()
 
 bool Session::nameExists(juce::String name)
 {
-//	for (int i = 0; i<mAllClients.size(); i++)
-//		if(mAllClients[i].compareName(name))
-//			return true;
 	for (Client* client : mAllClients)
 		if(client -> compareName(name))
 			return true;

@@ -35,6 +35,8 @@ public:
 	
 	void selectedRowsChanged (int lastRowSelected) override
 	{
+		DBG(lastRowSelected);
+		mCurrentlySelectedRow = lastRowSelected;
 		mNewSelection = true;
 	}
 	
@@ -86,12 +88,12 @@ public:
 	};
 	
 	
-	void checkIfNewSelection();
+	int getLatestSelection();
 	
 
 private:
 //	Session& mSession;
-	
+	int mCurrentlySelectedRow;
 	bool mNewSelection;
 	
 	juce::TableListBox mTable { {}, this };

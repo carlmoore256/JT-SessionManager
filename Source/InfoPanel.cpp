@@ -8,7 +8,7 @@
 
 InfoPanel::InfoPanel(int padding, int innerPadding) : Section(3, 8, padding, padding, innerPadding, innerPadding)
 {
-	mPanelColor = juce::Colour (0x410000);
+	mPanelColor = juce::Colour (0x420000);
 	
 	clearInfoDisplay();
 	
@@ -45,14 +45,14 @@ void InfoPanel::paint(juce::Graphics& g)
 	g.fillRect(area);
 	
 	
-	g.setColour(mPanelColor);
+//	g.setColour(mPanelColor);
+	g.setColour(juce::Colours::red);
 	
-	g.fillRect(sectionCells[0]);
+//	g.fillRect(getCellAt(0,0));
 	
-	g.fillRect(sectionCells[2]);
+	g.fillRect(getMergedRow(0));
 	
-	g.fillRect(sectionCells[4]);
-	
+		
 //	this will work for other components
 //	g.fillRect(area.reduced(30,30));
 	
@@ -75,8 +75,8 @@ void InfoPanel::resized()
 	
 	
 //	mPanelTitle.setBounds(0,0,getWidth(),100);
-	mPort.setBounds(sectionCells[1]);
-	mSkew.setBounds(sectionCells[2]);
+	mPort.setBounds(sectionCells[3]);
+	mSkew.setBounds(sectionCells[6]);
 	
 }
 

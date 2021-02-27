@@ -132,10 +132,20 @@ void ClientList::setText(const int columnNumber, const int rowNumber, const juce
 	mDataList->getChildElement (rowNumber)->setAttribute (columnName, newText);
 }
 
-void ClientList::checkIfNewSelection()
+int ClientList::getLatestSelection()
 {
 //	return mNewSelection;
+	bool newSelection = mNewSelection;
 	mNewSelection = false;
+	
+	if (newSelection)
+	{
+		return mCurrentlySelectedRow;
+	} else {
+		// return -1 so session knows not to update (possibly change this,
+		// so that session is constantly updating no matter what
+		return -1;
+	}
 }
 
 
