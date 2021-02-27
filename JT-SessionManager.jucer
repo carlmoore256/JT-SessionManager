@@ -10,8 +10,6 @@
       <FILE id="w1f2KI" name="ClientList.h" compile="0" resource="0" file="Source/ClientList.h"/>
       <FILE id="FwRz1n" name="InfoPanel.cpp" compile="1" resource="0" file="Source/InfoPanel.cpp"/>
       <FILE id="lWcQ7E" name="InfoPanel.hpp" compile="0" resource="0" file="Source/InfoPanel.hpp"/>
-      <FILE id="qiGxUG" name="JT-SessionManager.h" compile="0" resource="0"
-            file="Source/JT-SessionManager.h"/>
       <FILE id="zQGfyC" name="Main.cpp" compile="1" resource="0" file="Source/Main.cpp"/>
       <FILE id="b5nhQ3" name="MainComponent.cpp" compile="1" resource="0"
             file="Source/MainComponent.cpp"/>
