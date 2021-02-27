@@ -63,12 +63,6 @@ int Session::findEmptyPort()
 	return emptyPort;
 }
 
-void Session::checkTestClient()
-{
-	DBG("CHECKING CLIENT!");
-	DBG(testClient->getName());
-}
-
 bool Session::nameExists(juce::String name)
 {
 //	for (int i = 0; i<mAllClients.size(); i++)

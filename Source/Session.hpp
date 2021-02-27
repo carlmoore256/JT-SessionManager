@@ -36,9 +36,7 @@ public:
     void freeClients();
 	
 	int findEmptyPort();
-	
-	void checkTestClient();
-	
+		
 private:
 	ClientList clientList;
 	InfoPanel infoPanel;
