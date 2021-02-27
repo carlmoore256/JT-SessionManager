@@ -144,7 +144,9 @@ int ClientList::getLatestSelection()
 	} else {
 		// return -1 so session knows not to update (possibly change this,
 		// so that session is constantly updating no matter what
-		return -1;
+//		return -1;
+		
+		return mCurrentlySelectedRow;
 	}
 }
 

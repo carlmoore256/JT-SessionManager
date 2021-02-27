@@ -35,7 +35,7 @@ public:
 	
 	void selectedRowsChanged (int lastRowSelected) override
 	{
-		DBG(lastRowSelected);
+		DBG("row selected: " + std::to_string(lastRowSelected));
 		mCurrentlySelectedRow = lastRowSelected;
 		mNewSelection = true;
 	}
@@ -92,7 +92,6 @@ public:
 	
 
 private:
-//	Session& mSession;
 	int mCurrentlySelectedRow;
 	bool mNewSelection;
 	
@@ -104,6 +103,9 @@ private:
 	juce::XmlElement* mDataList = nullptr;
 	
 	int mNumRows = 0;
+	
+//	build out this function to take an xml row and convert into a client
+	void mapClientData();
 	
 	class EditableTextCustomComponent  : public juce::Label
 	{

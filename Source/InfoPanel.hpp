@@ -11,6 +11,7 @@
 #include <JuceHeader.h>
 #include <stdio.h>
 #include "Section.hpp"
+//#include "Client.h"
 
 //#endif /* InfoPanel_hpp */
 
@@ -35,7 +36,7 @@ public:
 private:
 	juce::Label mPanelTitle;
 	juce::Label mConnectStatus;
-	juce::Label mPort ;
+	juce::Label mPort;
 	juce::Label mSkew;
 	juce::Label mQuality;
 	

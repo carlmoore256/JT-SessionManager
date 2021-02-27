@@ -28,6 +28,10 @@ void Session::loadSession()
 void Session::update()
 {
 	int selectedClient = mClientList->getLatestSelection();
+//	then take this selected client, and send update to infoPanel
+	
+	
+//	mInfoPanel
 }
 
 void Session::createClient(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage)
