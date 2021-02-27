@@ -4,10 +4,8 @@
 //  main class that controls the session
 //  Created by Carl Moore on 2/18/21.
 
-//#include "JT-SessionManager.h"
-
-#ifndef Session_hpp
-#define Session_hpp
+#ifndef SESSION_HPP
+#define SESSION_HPP
 
 #include <JuceHeader.h>
 //#include <stdio.h>
@@ -56,4 +54,4 @@ private:
 //	std::vector<juce::String> existingNames(); // returns vector of all names
 };
 
-#endif /* Session_hpp */
+#endif /* SESSION_HPP */

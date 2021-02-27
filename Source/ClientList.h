@@ -5,10 +5,8 @@
 //  Created by Carl Moore on 2/17/21.
 //
 
-//#include "JT-SessionManager.h"
-
-#ifndef ClientList_h
-#define ClientList_h
+#ifndef CLIENTLIST_H
+#define CLIENTLIST_H
 
 #include <JuceHeader.h>
 //#include <stdio.h>
@@ -207,4 +205,4 @@ private:
 
 };
 
-#endif /* ClientList_h */
+#endif /* CLIENTLIST_H */

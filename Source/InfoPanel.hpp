@@ -5,10 +5,8 @@
 //  Created by Carl Moore on 2/19/21.
 //
 
-//#include "JT-SessionManager.h"
-
-#ifndef InfoPanel_hpp
-#define InfoPanel_hpp
+#ifndef INFOPANEL_HPP
+#define INFOPANEL_HPP
 
 #include <JuceHeader.h>
 //#include <stdio.h>
@@ -60,4 +58,4 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (InfoPanel)
 };
 
-#endif /* InfoPanel_hpp */
+#endif /* INFOPANEL_HPP */

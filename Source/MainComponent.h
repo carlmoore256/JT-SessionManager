@@ -1,7 +1,5 @@
-//#include "JT-SessionManager.h"
-
-#ifndef MainComponent_h
-#define MainComponent_h
+#ifndef MAINCOMPONENT_H
+#define MAINCOMPONENT_H
 
 #include <JuceHeader.h>
 //#include <stdio.h>
@@ -45,4 +43,4 @@ private:
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };
 
-#endif /* MainComponent_h */
+#endif /* MAINCOMPONENT_H */

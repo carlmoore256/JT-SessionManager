@@ -5,10 +5,8 @@
 //  Created by Carl Moore on 2/17/21.
 //
 
-//#include "JT-SessionManager.h"
-
-#ifndef Client_h
-#define Client_h
+#ifndef CLIENT_H
+#define CLIENT_H
 
 #include <JuceHeader.h>
 //#include <stdio.h>
@@ -96,4 +94,4 @@ private:
 	ClientServer* mClientServer;
 };
 
-#endif /* Client_h */
+#endif /* CLIENT_H */

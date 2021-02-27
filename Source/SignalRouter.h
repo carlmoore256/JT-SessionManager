@@ -5,10 +5,8 @@
 //  Created by William Brent on 2/27/21.
 //
 
-//#include "JT-SessionManager.h"
-
-#ifndef SignalRouter_h
-#define SignalRouter_h
+#ifndef SIGNALROUTER_H
+#define SIGNALROUTER_H
 
 #include <JuceHeader.h>
 //#include <stdio.h>
@@ -32,4 +30,4 @@ private:
 
 };
 
-#endif /* SignalRouter_h */
+#endif /* SIGNALROUTER_H */

@@ -5,10 +5,8 @@
 //  Created by Carl Moore on 2/19/21.
 //
 
-//#include "JT-SessionManager.h"
-
-#ifndef Section_hpp
-#define Section_hpp
+#ifndef SECTION_HPP
+#define SECTION_HPP
 
 #include <JuceHeader.h>
 //#include <stdio.h>
@@ -95,4 +93,4 @@ private:
 
 };
 
-#endif /* Section_hpp */
+#endif /* SECTION_HPP */
