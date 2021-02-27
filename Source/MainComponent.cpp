@@ -23,7 +23,7 @@ void MainComponent::paint (juce::Graphics& g)
 	int childWidth = area.getWidth() / 3;
 	mClientList.setBounds(area.removeFromLeft(childWidth*2));
 	mInfoPanel.setBounds(area.removeFromLeft(childWidth));
-	mSession.checkTestClient();
+	
 //	DBG(mClientList.getSelection(<#const int rowNumber#>))
 }
 

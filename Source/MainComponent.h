@@ -4,13 +4,14 @@
 #include "ClientList.h"
 #include "InfoPanel.hpp"
 #include "Session.hpp"
+#include "Section.hpp"
 
 
 //#endif /* ClientList_hpp */
 
 //	put all your controls and content here
 
-class MainComponent  : public juce::Component
+class MainComponent  : public Section
 {
 public:
 
