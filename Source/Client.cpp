@@ -145,3 +145,16 @@ void Client::ClientServer::stopServer()
 {
 	childProcess.kill();
 }
+
+void Client::addSignalDest(juce::String d)
+{
+    mSignalDestinations.add(d);
+}
+
+void Client::removeSignalDest(juce::String d)
+{
+    int idx;
+    
+    idx = mSignalDestinations.indexOf(d);
+    mSignalDestinations.remove(idx);
+}

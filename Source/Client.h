@@ -15,7 +15,7 @@
 //#include "InfoPanel.hpp"
 //#include "Section.hpp"
 //#include "Session.hpp"
-//#include "SignalRouter.h"
+#include "SignalRouter.h"
 
 // ===========================================
 
@@ -39,6 +39,12 @@ public:
 	bool checkIfActive();
 	
 	std::map<std::string, float> getClientStats();
+
+    SignalRouter mSignalRouter;
+    juce::Array<juce::String> mSignalDestinations;
+    
+    void addSignalDest(juce::String d);
+    void removeSignalDest(juce::String d);
 	
 private:
 	const juce::String mName;

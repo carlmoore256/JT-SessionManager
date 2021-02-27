@@ -10,6 +10,7 @@
 Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip)
 {
 	createClient("test", 0, 1, true, true, true);
+    connectSignals();
 }
 
 Session::~Session()
@@ -68,6 +69,29 @@ int Session::findEmptyPort()
 		emptyPort++;
 	
 	return emptyPort;
+}
+
+void Session::connectSignals()
+{
+    // nested for loops to run through mAllClients, pull up each one's signal router
+    // - inner loop makes connections to all other entries in mAllClients. use thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.connect();
+    // - add connected clients to thisClient.mSignalDestinations as we go
+    
+    // test one client
+    Client* thisClient = mAllClients[0];
+    
+    thisClient->mSignalRouter.setDest("dummy");
+    thisClient->mSignalRouter.connect();
+    thisClient->mSignalDestinations.add("dummy");
+    
+    DBG("signal connection");
+}
+
+void Session::disconnectSignals()
+{
+    // run through all clients, check the contents of each client's mSignalDestinations array
+    //  - disconnect from each destination with thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.disconnect()
+    //  - remove each destination from mSignalDestinations
 }
 
 bool Session::nameExists(juce::String name)

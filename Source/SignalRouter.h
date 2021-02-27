@@ -23,11 +23,17 @@ public:
     SignalRouter();
     ~SignalRouter();
 
-    void setSource(juce::String s);
+    void setClient(juce::String c);
     void setDest(juce::String d);
+    void connect();
+    void disconnect();
     
 private:
 
+    // keep track of which client this router belongs to
+    // this will be used as the signal source
+    juce::String mClient;
+    juce::String mDest;
 };
 
 #endif /* SIGNALROUTER_H */

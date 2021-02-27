@@ -34,7 +34,10 @@ public:
     void freeClients();
 	
 	int findEmptyPort();
-	
+    
+    void connectSignals();
+    void disconnectSignals();
+
 		
 private:
 	ClientList* mClientList;

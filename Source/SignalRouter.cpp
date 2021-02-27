@@ -15,4 +15,24 @@ SignalRouter::SignalRouter()
 SignalRouter::~SignalRouter()
 {
 }
+
 //=================================
+void SignalRouter::setClient(juce::String c)
+{
+    mClient = c;
+}
+
+void SignalRouter::setDest(juce::String d)
+{
+    mDest = d;
+}
+
+void SignalRouter::connect()
+{
+    // generate jack_connect command here
+}
+
+void SignalRouter::disconnect()
+{
+    // generate jack_disconnect command here
+}
