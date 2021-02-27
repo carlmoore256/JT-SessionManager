@@ -29,10 +29,14 @@ private:
 	InfoPanel mInfoPanel;
 	Session mSession;
 	
-	juce::TextButton createClient_b;
+	juce::Label nameInput_l;
 	
+	juce::TextButton createClient_b;
+	juce::TextButton saveSession_b;
+	juce::TextButton loadSession_b;
 //	juce::Label createClient_l;
 	
+	void renderTopBar(juce::Array<juce::Rectangle<int>> rowCells, int innerPad=15);
 	
 	JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MainComponent)
 };

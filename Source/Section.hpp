@@ -44,7 +44,7 @@ public:
 	{
 		juce::Array<juce::Rectangle<int>> row;
 		for (int i = 0; i < mDivX; i++)
-			row[i] = containerCells[index + i];
+			row.add(sectionCells[(index * mDivX) + i]);
 		return row;
 	}
 	
@@ -86,7 +86,7 @@ private:
 	int mInnerPadX, mInnerPadY;
 	
 	
-	juce::Array<juce::Rectangle<int>> containerCells;
+//	juce::Array<juce::Rectangle<int>> containerCells;
 
 };
 

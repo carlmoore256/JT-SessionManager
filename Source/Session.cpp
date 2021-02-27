@@ -18,11 +18,11 @@ Session::~Session()
 }
 void Session::saveSession()
 {
-	
+	DBG("Saving Session...");
 }
 void Session::loadSession()
 {
-	
+	DBG("Loading Session...");
 }
 
 void Session::update()
