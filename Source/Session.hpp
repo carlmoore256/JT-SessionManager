@@ -53,18 +53,19 @@ private:
 	
 	juce::XmlElement* mColumnList = nullptr;
 	juce::XmlElement* mDataList = nullptr;
-	
-	Client* testClient;
-	
-	//	loads the headers of each column for mClientList from TableHeaders.xml
-	void loadTableHeaders(juce::File xmlTableHeaders);
+
 	
 	bool nameExists(juce::String name);
 	
 	bool intExists(int i);
 	
 	juce::String findAlternateName(juce::String name);
+		
 	
+	// ==== LOADING / SAVING ==========
+	
+	//	loads the headers of each column for mClientList from TableHeaders.xml
+	void loadTableHeaders(juce::File xmlTableHeaders);
 	
 //	std::vector<juce::String> existingNames(); // returns vector of all names
 };

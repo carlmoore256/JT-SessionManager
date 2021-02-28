@@ -21,6 +21,9 @@ Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip
 	loadTableHeaders(mResourceDir.getChildFile("TableHeaders.xml"));
 	
 //	createClient("test", 0, 1, true, true, true);
+	
+//	DELETE ME
+	loadSession(mResourceDir.getChildFile("SessionData.xml"));
 }
 
 Session::~Session()
@@ -38,54 +41,37 @@ void Session::loadSession(juce::File sessionFile)
 	
 	if (sessionFile.exists())
 	{
-//		std::unique_ptr<juce::XmlElement> clientData;
-//		clientData = juce::XmlDocument::parse(sessionFile);
-//		
-//		juce::XmlElement* columnList = clientData->getChildByName ("DATA");
-//		juce::XmlElement* dataList = clientData->getChildByName ("HEADERS");
-//		
-//		int numRows = dataList->getNumChildElements();
-//		
-//		forEachXmlChildElement(*columnList, columnXml)
-//		{
-//			
-//			DBG(columnXml->getStringAttribute ("name"));
-//			DBG(columnXml->getStringAttribute ("columnId"));
-//			DBG(columnXml->getStringAttribute ("width"));
-//			DBG("\n");
-//
-//
-//			mTable.getHeader().addColumn (columnXml->getStringAttribute ("name"),
-//										 columnXml->getIntAttribute ("columnId"),
-//										 columnXml->getIntAttribute ("width"),
-//										 50,
-//										 400,
-//										 juce::TableHeaderComponent::defaultFlags);
-//		}
+		std::unique_ptr<juce::XmlElement> clientData;
+		clientData = juce::XmlDocument::parse(sessionFile);
+		
+		juce::XmlElement* dataList = clientData->getChildByName ("DATA");
+		juce::XmlElement* columnList = clientData->getChildByName ("HEADERS");
+		
+		// 	set number of rows in clientList
+		mClientList->setNumRows(dataList->getNumChildElements());
+		
+		//	before we load session, we need to delete all existing column headers and replace them with whatever is in the header of the session file. This will only affect the horizontal sizing of cells from last session
+		mClientList->resetColumns();
+		loadTableHeaders(sessionFile);
+		
+		// 	delete existing clients; create a popup here that confirms if user wants to delete current session
+		freeClients();
+		
+		// create the clients as objects
+		forEachXmlChildElement(*dataList, dataXml)
+		{
+			// create a new client with the xml row information
+			createClient(dataXml->getStringAttribute("Name"),
+						 dataXml->getStringAttribute("Port").getIntValue(),
+						 dataXml->getStringAttribute("Channels").getIntValue(),
+						 dataXml->getStringAttribute("RouteAudio").getIntValue(),
+						 dataXml->getStringAttribute("ZeroUnderrun").getIntValue(),
+						 dataXml->getStringAttribute("AutoManage").getIntValue());
+		}
 	}
-	
-//	set mClientList.mNumRows = dataList->getNumChildElements()
 }
 
-void Session::loadTableHeaders(juce::File xmlTableHeaders)
-{
-	std::unique_ptr<juce::XmlElement> tableHeaderPtrs = juce::XmlDocument::parse(xmlTableHeaders);
-	
-	juce::XmlElement* columnList = tableHeaderPtrs->getChildByName ("HEADERS");
-	
-	
-//	foreach tableheader -> add to column on clientList
-	forEachXmlChildElement(*columnList, colXml)
-	{
-		auto name = colXml->getStringAttribute("name");
-		juce::String columnId = colXml->getStringAttribute("columnId");
-		juce::String width = colXml->getStringAttribute("width");
-		
-		mClientList->addHeaderColumn(name,
-									 columnId.getIntValue(),
-									 width.getIntValue());
-	}
-}
+
 
 void Session::update()
 {
@@ -150,4 +136,29 @@ juce::String Session::findAlternateName(juce::String name)
 		i++;
 	}
 	return altName;
+}
+
+// ==== LOADING / SAVING =====================================
+
+void Session::loadTableHeaders(juce::File xmlTableHeaders)
+{
+//	FIRST, WE NEED TO DELETE ALL OF THE COLUMN HEADERS
+	std::unique_ptr<juce::XmlElement> tableHeaderPtrs = juce::XmlDocument::parse(xmlTableHeaders);
+	
+	juce::XmlElement* columnList = tableHeaderPtrs->getChildByName ("HEADERS");
+
+	forEachXmlChildElement(*columnList, colXml)
+	{
+		auto name = colXml->getStringAttribute("name");
+//		DBG(name);
+		juce::String columnId = colXml->getStringAttribute("columnId");
+//		DBG("col id " + columnId);
+		juce::String width = colXml->getStringAttribute("width");
+		
+		mClientList->addHeaderColumn(name,
+									 columnId.getIntValue(),
+									 width.getIntValue());
+		
+//		tableHeaders.add(name);
+	}
 }

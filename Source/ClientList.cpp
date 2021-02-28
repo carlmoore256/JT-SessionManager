@@ -17,24 +17,24 @@ ClientList::ClientList()
 	mTable.setColour (juce::ListBox::outlineColourId, juce::Colours::grey);
 	mTable.setOutlineThickness (1);
 
-	if (mColumnList != nullptr)
-	{
-		forEachXmlChildElement(*mColumnList, columnXml)
-		{
-			DBG(columnXml->getStringAttribute ("name"));
-			DBG(columnXml->getStringAttribute ("columnId"));
-			DBG(columnXml->getStringAttribute ("width"));
-			DBG("\n");
-
-
-			mTable.getHeader().addColumn (columnXml->getStringAttribute ("name"),
-										 columnXml->getIntAttribute ("columnId"),
-										 columnXml->getIntAttribute ("width"),
-										 50,
-										 400,
-										 juce::TableHeaderComponent::defaultFlags);
-		}
-	}
+//	if (mColumnList != nullptr)
+//	{
+//		forEachXmlChildElement(*mColumnList, columnXml)
+//		{
+//			DBG(columnXml->getStringAttribute ("name"));
+//			DBG(columnXml->getStringAttribute ("columnId"));
+//			DBG(columnXml->getStringAttribute ("width"));
+//			DBG("\n");
+//
+//
+//			mTable.getHeader().addColumn (columnXml->getStringAttribute ("name"),
+//										 columnXml->getIntAttribute ("columnId"),
+//										 columnXml->getIntAttribute ("width"),
+//										 50,
+//										 400,
+//										 juce::TableHeaderComponent::defaultFlags);
+//		}
+//	}
 
 	mTable.getHeader().setSortColumnId (1, true);
 	mTable.setMultipleSelectionEnabled (false);
@@ -65,6 +65,10 @@ void ClientList::addHeaderColumn(juce::String colName, int colID, int width, int
 // eventually move to session
 void ClientList::loadTableHeaders()
 {
+	// reset all column headers before displaying, migtht result in bugs
+	DBG("resetting columns...");
+	resetColumns();
+	
 	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
 	auto dir = juce::File::getSpecialLocation(locationType);
 	

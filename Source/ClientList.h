@@ -32,8 +32,13 @@ public:
 	int getNumRows() override;
 	
 	void resized() override;
-	
+
 	void addHeaderColumn(juce::String colName, int colID, int width, int minWidth=30);
+		
+//	calls removeAllColumns on tableListBox's TableHeaderComponent
+	void resetColumns() { mTable.getHeader().removeAllColumns(); };
+
+	void setNumRows(int numRows) { mNumRows = numRows; };
 	
 	void selectedRowsChanged (int lastRowSelected) override;
 	
