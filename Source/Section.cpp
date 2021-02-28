@@ -7,7 +7,6 @@
 
 #include "Section.hpp"
 
-
 Section::Section(int div_x, int div_y, int pad_x, int pad_y, int innerPad_x, int innerPad_y)
 {
 	mDivX = div_x;

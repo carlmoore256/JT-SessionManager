@@ -5,10 +5,12 @@
 //  Created by Carl Moore on 2/19/21.
 //
 
+#include <JuceHeader.h>
+
 #ifndef SECTION_HPP
 #define SECTION_HPP
 
-#include <JuceHeader.h>
+////#include <JuceHeader.h>
 //#include <stdio.h>
 //
 //#include "Client.h"

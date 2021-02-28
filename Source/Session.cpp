@@ -9,8 +9,6 @@
 
 Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip)
 {
-    mSignalRouter.setSource("system");
-    
 	createClient("test", 0, 1, true, true, true);
     connectClientSignals();
     connectHostSignals();
@@ -45,8 +43,7 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	
 	if (port == -1) // -1 specified in interface to be no input
 		port = findEmptyPort();
-	
-
+    
 	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
 	mAllClients.add(newClient);
 }
@@ -74,53 +71,62 @@ int Session::findEmptyPort()
 	return emptyPort;
 }
 
-// call this when all clients have been connected to their server
 void Session::connectClientSignals()
 {
     // nested for loops to run through mAllClients, pull up each one's signal router
     // - inner loop makes connections to all other entries in mAllClients. use thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.connect();
     // - add connected clients to thisClient.mSignalDestinations as we go
     
-    // test one client
+    // test one client connecting to a dummy client
     Client* thisClient = mAllClients[0];
     
     thisClient->mSignalRouter.setDest("dummy");
-    thisClient->mSignalRouter.connect();
-    thisClient->mSignalDestinations.add("dummy");
-    
-    DBG("signal connection");
+    thisClient->mSignalRouter.generateCommand(SignalRouter::CommandType::connect, "receive_1", "send_1");
+    thisClient->mSignalRouter.issueCommand();
+    thisClient->mSignalDestinations.add(thisClient->getName());
 }
 
 void Session::disconnectClientSignals()
 {
-    // run through all clients, check the contents of each client's mSignalDestinations array
-    //  - disconnect from each destination with thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.disconnect()
-    //  - remove each destination from mSignalDestinations
+    // run through all clients and disconnect them from each other
 }
 
-// call this when all clients have been connected to their server
 void Session::connectHostSignals()
 {
-    // nested for loops to run through mAllClients, pull up each one's signal router
-    // - inner loop makes connections to all other entries in mAllClients. use thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.connect();
-    // - add connected clients to thisClient.mSignalDestinations as we go
+    // connect the host's microphone to all client sends
+    // connect all client receives to host's speakers
     
     // test one client
     Client* thisClient = mAllClients[0];
     
+    mSignalRouter.setSource("system");
     mSignalRouter.setDest(thisClient->getName());
-    mSignalRouter.connect();
+    mSignalRouter.generateCommand(SignalRouter::CommandType::connect, "capture_1", "send_1");
+    mSignalRouter.issueCommand();
+
+    mSignalRouter.setSource(thisClient->getName());
+    mSignalRouter.setDest("system");
+    mSignalRouter.generateCommand(SignalRouter::CommandType::connect, "receive_1", "playback_1");
+    mSignalRouter.issueCommand();
 }
 
 void Session::disconnectHostSignals()
 {
-    // run through all clients, check the contents of each client's mSignalDestinations array
-    //  - disconnect from each destination with thisClient.mSignalRouter.setDest() and thisClient.mSignalRouter.disconnect()
-    //  - remove each destination from mSignalDestinations
+    // disconnect host's microphone from all client sends
+    // disconnect all client receives from host's speakers
+
+    // test one client
     Client* thisClient = mAllClients[0];
     
+    mSignalRouter.setSource("system");
     mSignalRouter.setDest(thisClient->getName());
-    mSignalRouter.disconnect();
+    mSignalRouter.generateCommand(SignalRouter::CommandType::disconnect, "capture_1", "send_1");
+    mSignalRouter.issueCommand();
+
+    mSignalRouter.setSource(thisClient->getName());
+    mSignalRouter.setDest("system");
+    mSignalRouter.generateCommand(SignalRouter::CommandType::disconnect, "receive_1", "playback_1");
+    mSignalRouter.issueCommand();
 }
 
 bool Session::nameExists(juce::String name)

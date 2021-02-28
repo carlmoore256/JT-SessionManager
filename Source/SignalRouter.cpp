@@ -7,7 +7,6 @@
 
 #include "SignalRouter.h"
 
-
 SignalRouter::SignalRouter()
 {
 }
@@ -27,12 +26,39 @@ void SignalRouter::setDest(juce::String d)
     mDest = d;
 }
 
-void SignalRouter::connect()
+void SignalRouter::generateCommand(CommandType t, juce::String sourceJackPort, juce::String destJackPort)
 {
+    juce::String binaryPath;
+    
+    binaryPath = BIN_PATH;
+//    binary = "/usr/local/bin/";
+    
+    switch(t)
+    {
+        case disconnect:
+            binaryPath += "jack_disconnect";
+            break;
+        case connect:
+            binaryPath += "jack_connect";
+            break;
+        default:
+            break;
+    }
+    
     // generate jack_connect command here
+    mCommand =
+    binaryPath + " "
+    + juce::String(mSource) + ":" + sourceJackPort
+    + " "
+    + juce::String(mDest) + ":" + destJackPort;
 }
 
-void SignalRouter::disconnect()
+void SignalRouter::issueCommand()
 {
-    // generate jack_disconnect command here
+    DBG(mCommand);
+    
+    if(mChildProcess.start (mCommand, wantStdOut | wantStdErr))
+    {
+        DBG("signal routing command issued");
+    }
 }

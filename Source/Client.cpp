@@ -7,7 +7,6 @@
 
 #include "Client.h"
 
-
 // ===========================================
 
 Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name)
@@ -17,7 +16,8 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 	mAutoConnectAudio = autoConnectAudio;
 	mZeroUnderrun = zeroUnderrun;
 	mAutoManage = autoManage;
-	
+    mSignalRouter.setSource(name);
+    	
 	if (startOnCreate)
 	{
 		// start the server thread
@@ -117,8 +117,12 @@ void Client::ClientServer::run()
 
 juce::String Client::ClientServer::generateCommand()
 {
-	juce::String command =
-	"/usr/local/bin/jacktrip"
+    juce::String binaryPath = BIN_PATH;
+    juce::String command;
+    
+    command =
+    binaryPath +
+	"jacktrip"
 	" -n " + juce::String(owner.mChannels) +
 	" -s " +
 	"--clientname " + owner.mName +

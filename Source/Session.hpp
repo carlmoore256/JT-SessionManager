@@ -18,6 +18,10 @@
 
 #define PORT_RNG_START 4464
 
+#ifndef BIN_PATH
+#define BIN_PATH "/usr/local/bin/"
+#endif
+
 class Session : public juce::Component
 {
 public:
