@@ -46,6 +46,10 @@ private:
 	
 	juce::Array<Client*> mAllClients;
 	
+	std::unique_ptr<juce::XmlElement> clientData;
+	juce::XmlElement* mColumnList = nullptr;
+	juce::XmlElement* mDataList = nullptr;
+	
 	Client* testClient;
 	
 	bool nameExists(juce::String name);

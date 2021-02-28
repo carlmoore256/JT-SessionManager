@@ -21,6 +21,12 @@ ClientList::ClientList()
 	{
 		forEachXmlChildElement(*mColumnList, columnXml)
 		{
+			DBG(columnXml->getStringAttribute ("name"));
+			DBG(columnXml->getStringAttribute ("columnId"));
+			DBG(columnXml->getStringAttribute ("width"));
+			DBG("\n");
+
+
 			mTable.getHeader().addColumn (columnXml->getStringAttribute ("name"),
 										 columnXml->getIntAttribute ("columnId"),
 										 columnXml->getIntAttribute ("width"),
@@ -31,7 +37,7 @@ ClientList::ClientList()
 	}
 
 	mTable.getHeader().setSortColumnId (1, true);
-	mTable.setMultipleSelectionEnabled (true);
+	mTable.setMultipleSelectionEnabled (false);
 }
 
 ClientList::~ClientList()
@@ -43,6 +49,24 @@ ClientList::~ClientList()
 void ClientList::resized()
 {
 	mTable.setBoundsInset (juce::BorderSize<int> (8));
+}
+
+void ClientList::addColumn(juce::String colName, int colID, int width, int minWidth)
+{
+	mTable.getHeader().addColumn(colName, // name of column
+								 colID, // column id
+								 width, // column init width
+								 minWidth, // column min width
+								 400, // column max width
+								 juce::TableHeaderComponent::defaultFlags,
+								 -1); // insert index
+}
+
+void ClientList::selectedRowsChanged(int lastRowSelected)
+{
+	DBG("row selected: " + std::to_string(lastRowSelected));
+	mCurrentlySelectedRow = lastRowSelected;
+	mNewSelection = true;
 }
 
 

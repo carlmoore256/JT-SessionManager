@@ -33,12 +33,9 @@ public:
 	
 	void resized() override;
 	
-	void selectedRowsChanged (int lastRowSelected) override
-	{
-		DBG("row selected: " + std::to_string(lastRowSelected));
-		mCurrentlySelectedRow = lastRowSelected;
-		mNewSelection = true;
-	}
+	void addColumn(juce::String colName, int colID, int width, int minWidth=30);
+	
+	void selectedRowsChanged (int lastRowSelected) override;
 	
 	void paintRowBackground (juce::Graphics&, int, int, int, bool) override;
 	
@@ -46,7 +43,6 @@ public:
 					int width, int height, bool rowIsSelected) override;
 	
 	void sortOrderChanged (int newSortColumnId, bool isForwards) override;
-	
 	
 	int getColumnAutoSizeWidth (int columnId) override;
 	
@@ -57,7 +53,8 @@ public:
 	juce::String getText (const int columnNumber, const int rowNumber) const;
 	
 	void setText (const int columnNumber, const int rowNumber, const juce::String& newText);
-
+	
+//	used to update a custom component in a cell
 	Component* refreshComponentForCell (int rowNumber, int columnId, bool /*isRowSelected*/,
 										Component* existingComponentToUpdate) override
 	{
@@ -98,7 +95,9 @@ private:
 	juce::TableListBox mTable { {}, this };
 	juce::Font font { 14.0f };
 	
+//	holds parsed xml
 	std::unique_ptr<juce::XmlElement> clientData;
+	
 	juce::XmlElement* mColumnList = nullptr;
 	juce::XmlElement* mDataList = nullptr;
 	
