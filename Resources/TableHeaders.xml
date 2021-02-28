@@ -1,0 +1,15 @@
+<TABLE_DATA>
+    <HEADERS>
+        <COLUMN columnId="1" name="ID" width="50"/>
+        <COLUMN columnId="2" name="Name" width="200"/>
+        <COLUMN columnId="3" name="Port" width="200"/>
+        <COLUMN columnId="4" name="Channels" width="200"/>
+        <COLUMN columnId="5" name="RouteAudio" width="200"/>
+        <COLUMN columnId="6" name="ZeroUnderrun" width="200"/>
+        <COLUMN columnId="7" name="AutoManage" width="200"/>
+        <COLUMN columnId="8" name="Connection" width="100"/>
+        <COLUMN columnId="9" name="Skew" width="100"/>
+        <COLUMN columnId="10" name="Quality" width="50"/>
+        <COLUMN columnId="11" name="Select" width="50"/>
+    </HEADERS>
+</TABLE_DATA>

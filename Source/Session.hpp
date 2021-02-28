@@ -31,7 +31,7 @@ public:
 	void update();
 	
 	void saveSession();
-	void loadSession();
+	void loadSession(juce::File sessionFile);
 	
 	void createClient(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage);
     
@@ -47,10 +47,17 @@ private:
 	juce::Array<Client*> mAllClients;
 	
 	std::unique_ptr<juce::XmlElement> clientData;
+
+	//	for loading listbox headers, and opening saved file directory automatically
+	juce::File mResourceDir;
+	
 	juce::XmlElement* mColumnList = nullptr;
 	juce::XmlElement* mDataList = nullptr;
 	
 	Client* testClient;
+	
+	//	loads the headers of each column for mClientList from TableHeaders.xml
+	void loadTableHeaders(juce::File xmlTableHeaders);
 	
 	bool nameExists(juce::String name);
 	

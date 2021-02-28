@@ -84,8 +84,9 @@ void MainComponent::buttonClicked(juce::Button* button)
 	if(button == &saveSession_b)
 		mSession.saveSession();
 	
-	if(button == &loadSession_b)
-		mSession.loadSession();
+//	loadSession requires a file popup
+//	if(button == &loadSession_b)
+//		mSession.loadSession();
 }
 
 //=============================================================

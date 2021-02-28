@@ -51,7 +51,7 @@ void ClientList::resized()
 	mTable.setBoundsInset (juce::BorderSize<int> (8));
 }
 
-void ClientList::addColumn(juce::String colName, int colID, int width, int minWidth)
+void ClientList::addHeaderColumn(juce::String colName, int colID, int width, int minWidth)
 {
 	mTable.getHeader().addColumn(colName, // name of column
 								 colID, // column id
@@ -60,6 +60,34 @@ void ClientList::addColumn(juce::String colName, int colID, int width, int minWi
 								 400, // column max width
 								 juce::TableHeaderComponent::defaultFlags,
 								 -1); // insert index
+}
+
+// eventually move to session
+void ClientList::loadTableHeaders()
+{
+	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
+	auto dir = juce::File::getSpecialLocation(locationType);
+	
+	int numTries = 0;
+
+	while (! dir.getChildFile ("Resources").exists() && numTries++ < 15)
+		dir = dir.getParentDirectory();
+	
+	auto tableFile = dir.getChildFile ("Resources").getChildFile ("SessionData.xml");
+	
+	std::cout << tableFile.getFullPathName();
+
+	if (tableFile.exists())
+	{
+		DBG("TABLE FILE EXITS");
+		clientData = juce::XmlDocument::parse (tableFile);            // [3]
+
+//		doesn't make sense here to make a list of headers, since these will be defined by the software, when TableHeaders.xml is loaded, which provides headers
+		mDataList   = clientData->getChildByName ("DATA");
+		mColumnList = clientData->getChildByName ("HEADERS");          // [4]
+
+		mNumRows = mDataList->getNumChildElements();                      // [5]
+	}
 }
 
 void ClientList::selectedRowsChanged(int lastRowSelected)
@@ -177,6 +205,7 @@ int ClientList::getLatestSelection()
 
 // ====== PRIVATE ========
 
+// move to session
 void ClientList::loadData()
 {
 	//	auto dir = juce::File::getCurrentWorkingDirectory();

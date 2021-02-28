@@ -33,7 +33,7 @@ public:
 	
 	void resized() override;
 	
-	void addColumn(juce::String colName, int colID, int width, int minWidth=30);
+	void addHeaderColumn(juce::String colName, int colID, int width, int minWidth=30);
 	
 	void selectedRowsChanged (int lastRowSelected) override;
 	
@@ -105,6 +105,9 @@ private:
 	
 //	build out this function to take an xml row and convert into a client
 	void mapClientData();
+	
+//	loads table headers from an existing xml file
+	void loadTableHeaders();
 	
 	class EditableTextCustomComponent  : public juce::Label
 	{
