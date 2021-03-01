@@ -9,7 +9,8 @@
 
 ClientList::ClientList()
 {
-	
+    DBG("ClientList: constructor called");
+
 	loadData();
 	addAndMakeVisible (mTable);
 
@@ -35,7 +36,7 @@ ClientList::ClientList()
 
 ClientList::~ClientList()
 {
-	
+    DBG("ClientList: destructor called");
 }
 
 
@@ -166,11 +167,11 @@ void ClientList::loadData()
 	
 	auto tableFile = dir.getChildFile ("Resources").getChildFile ("SessionData.xml");
 	
-	std::cout << tableFile.getFullPathName();
+//	std::cout << tableFile.getFullPathName();
 
 	if (tableFile.exists())
 	{
-		DBG("TABLE FILE EXITS");
+		DBG("ClientList: table file exists");
 		clientData = juce::XmlDocument::parse (tableFile);            // [3]
 
 		mDataList   = clientData->getChildByName ("DATA");

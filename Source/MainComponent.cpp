@@ -2,6 +2,8 @@
 
 MainComponent::MainComponent() : Section(8, 8), mSession(&mClientList, &mInfoPanel)
 {
+    DBG("MainComponent: constructor called");
+    
 	addAndMakeVisible(mClientList);
 	addAndMakeVisible(mInfoPanel);
 	
@@ -28,6 +30,8 @@ MainComponent::MainComponent() : Section(8, 8), mSession(&mClientList, &mInfoPan
 
 MainComponent::~MainComponent()
 {
+    DBG("MainComponent: destructor called");
+
 	//	not necessary but good practice, when using custom listeners this will be important
 	createClient_b.removeListener(this);
 	saveSession_b.removeListener(this);
@@ -79,7 +83,7 @@ void MainComponent::resized()
 void MainComponent::buttonClicked(juce::Button* button)
 {
 	if(button == &createClient_b)
-		DBG("CREATE A CLIENT!");
+		DBG("MainComponent: create a client");
 	
 	if(button == &saveSession_b)
 		mSession.saveSession();

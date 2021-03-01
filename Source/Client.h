@@ -59,6 +59,7 @@ private:
 	bool mAutoManage;
 	
 	void startServer();
+    void stopServer();
 	
 	// ==============================================================
 	
@@ -75,6 +76,8 @@ private:
 		bool isRunning();
 		
 		void run() override;
+        
+        ChildProcess* getChildProcessPtr();
 		
 	private:
 		Client& owner;

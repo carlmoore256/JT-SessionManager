@@ -8,6 +8,8 @@
 
 InfoPanel::InfoPanel(int padding, int innerPadding) : Section(3, 8, padding, padding, innerPadding, innerPadding)
 {
+    DBG("InfoPanel: constructor called");
+
 	mPanelColor = juce::Colour (0x420000);
 	
 	clearInfoDisplay();
@@ -31,7 +33,9 @@ InfoPanel::InfoPanel(int padding, int innerPadding) : Section(3, 8, padding, pad
 }
 
 InfoPanel::~InfoPanel()
-{}
+{
+    DBG("InfoPanel: destructor called");
+}
 
 void InfoPanel::paint(juce::Graphics& g)
 {

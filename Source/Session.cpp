@@ -9,22 +9,26 @@
 
 Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip)
 {
-	createClient("test", 0, 1, true, true, true);
+    DBG("Session: constructor called");
+    
+	createClient("testClient", 0, 1, true, true, true);
     connectClientSignals();
     connectHostSignals();
 }
 
 Session::~Session()
 {
+    DBG("Session: destructor called");
+
     freeClients();
 }
 void Session::saveSession()
 {
-	DBG("Saving Session...");
+	DBG("Session: saving session...");
 }
 void Session::loadSession()
 {
-	DBG("Loading Session...");
+	DBG("Session: loading session...");
 }
 
 void Session::update()
@@ -51,7 +55,12 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 void Session::freeClients()
 {
     for (Client* client : mAllClients)
+    {
+        // need a public method for stopping a client's server.
+        // otherwise we'll always crash here
+//        client->stopServer
         delete client;
+    }
 }
 
 // finds the lowest value empty port

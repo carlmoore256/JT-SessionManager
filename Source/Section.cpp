@@ -9,6 +9,8 @@
 
 Section::Section(int div_x, int div_y, int pad_x, int pad_y, int innerPad_x, int innerPad_y)
 {
+    DBG("Section: constructor called");
+
 	mDivX = div_x;
 	mDivY = div_y;
 	mPadX = pad_x;
@@ -17,7 +19,10 @@ Section::Section(int div_x, int div_y, int pad_x, int pad_y, int innerPad_x, int
 	mInnerPadY = innerPad_y;
 }
 
-Section::~Section() {}
+Section::~Section()
+{
+    DBG("Section: constructor called");
+}
 
 void Section::setProperties(juce::Colour _color)
 {

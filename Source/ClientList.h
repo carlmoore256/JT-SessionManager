@@ -36,7 +36,7 @@ public:
 	
 	void selectedRowsChanged (int lastRowSelected) override
 	{
-		DBG("row selected: " + std::to_string(lastRowSelected));
+//		DBG("ClientList: row selected: " + std::to_string(lastRowSelected));
 		mCurrentlySelectedRow = lastRowSelected;
 		mNewSelection = true;
 	}

@@ -9,10 +9,12 @@
 
 SignalRouter::SignalRouter()
 {
+    DBG("SignalRouter: constructor called");
 }
 
 SignalRouter::~SignalRouter()
 {
+    DBG("SignalRouter: destructor called");
 }
 
 //=================================
@@ -55,10 +57,11 @@ void SignalRouter::generateCommand(CommandType t, juce::String sourceJackPort, j
 
 void SignalRouter::issueCommand()
 {
+    DBG("SignalRouter: command prepared");
     DBG(mCommand);
     
     if(mChildProcess.start (mCommand, wantStdOut | wantStdErr))
     {
-        DBG("signal routing command issued");
+        DBG("SignalRouter: signal routing command issued");
     }
 }

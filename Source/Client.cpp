@@ -11,6 +11,8 @@
 
 Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name)
 {
+    DBG("Client: constructor called");
+    
 	mPort = port;
 	mChannels = channels;
 	mAutoConnectAudio = autoConnectAudio;
@@ -27,8 +29,9 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 
 Client::~Client()
 {
-	DBG("CLIENT DESTRUCTOR CALLED!");
-	mClientServer->stopThread(500);
+	DBG("Client: destructor called");
+    
+    // ClientServer's destructor should be called before Client's, so any running threads should have been stopped by here. therefore, it's safe to delete the ClientServer pointer
 	delete mClientServer;
 }
 
@@ -59,21 +62,50 @@ std::map<std::string, float> Client::getClientStats()
 void Client::startServer()
 {
 	auto threadName = mName + "_proc";
-	mClientServer = new ClientServer(*this);
+	
+    // create a new instance
+    mClientServer = new ClientServer(*this);
 	
 	mClientServer->startThread();
+}
+
+void Client::stopServer()
+{
+    juce::ChildProcess* thisProcessPtr;
+    
+    // get the pointer to the private child process. if it's running, getChildProcessPtr() will give us the pointer so we can kill the process. if not running, we get nullptr
+    thisProcessPtr = mClientServer->getChildProcessPtr();
+    
+    if(thisProcessPtr)
+    {
+        DBG("Client: killing active process");
+        thisProcessPtr->kill();
+    }
+    else
+        DBG("Client: invalid pointer");
 }
 
 // ===========================================
 //const juce::String& threadName
 
 Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"), owner(parentClient)
-{}
-
+{
+    DBG("Client::ClientServer: constructor called");
+}
 
 Client::ClientServer::~ClientServer()
 {
-//	stopServer();
+    DBG("Client::ClientServer: destructor called");
+
+    stopServer();
+}
+
+juce::ChildProcess* Client::ClientServer::getChildProcessPtr()
+{
+    if(childProcess.isRunning())
+        return &childProcess;
+    else
+        return nullptr;
 }
 
 bool Client::ClientServer::isRunning()
@@ -86,15 +118,17 @@ void Client::ClientServer::run()
 	
 	if(threadShouldExit())
 	{
-		DBG("thread SHOULD exit");
-	} else {
-		DBG("thread SHOULD NOT exit");
+//		DBG("Client::ClientServer: thread SHOULD exit");
+	}
+    else
+    {
+//		DBG("Client::ClientServer: thread SHOULD NOT exit");
 	}
 	
 	
 	while(!threadShouldExit())
 	{
-		DBG("THREAD RUNNING! \n");
+//		DBG("Client::ClientServer: thread running");
 		
 		if(mAllowRestart)
 			startServer();
@@ -135,12 +169,11 @@ juce::String Client::ClientServer::generateCommand()
 
 void Client::ClientServer::startServer()
 {
-	DBG("attempting to start server");
-	
+	DBG("Client::ClientServer: attempting to start server");
 	
 	if(childProcess.start (generateCommand(), wantStdOut | wantStdErr))
 	{
-		DBG("server opened");
+		DBG("Client::ClientServer: server started");
 		mProcessRunning = true;
 	}
 }
