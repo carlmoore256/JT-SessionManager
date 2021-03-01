@@ -71,7 +71,10 @@ void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 	g.setColour (rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour (juce::ListBox::textColourId));
 	g.setFont (font);
 	DBG("paintCell - rowNum " + juce::String(rowNumber) + " colId " + juce::String(columnId));
-		
+	
+	auto test = cl_ClientXml->getChildElement(1);
+	DBG(test->getStringAttribute ("Name"));
+
 	// might be inefficient, look into how to implement getNextElement()
 	if (auto* rowElement = cl_ClientXml->getChildElement (rowNumber))
 	{
@@ -90,7 +93,7 @@ void ClientList::sortOrderChanged (int newSortColumnId, bool isForwards)
 	if (newSortColumnId != 0)
 	{
 		DataSorter sorter (getAttributeNameForColumnId (newSortColumnId), isForwards);
-		mDataList->sortChildElements (sorter);
+		cl_ClientXml->sortChildElements (sorter);
 
 		mTable.updateContent();
 	}
@@ -105,7 +108,7 @@ int ClientList::getColumnAutoSizeWidth(int columnId)
 
 		for (auto i = getNumRows(); --i >= 0;)
 		{
-			if (auto* rowElement = mDataList->getChildElement (i))
+			if (auto* rowElement = cl_ClientXml->getChildElement (i))
 			{
 				auto text = rowElement->getStringAttribute (getAttributeNameForColumnId (columnId));
 
@@ -118,24 +121,24 @@ int ClientList::getColumnAutoSizeWidth(int columnId)
 
 int ClientList::getSelection (const int rowNumber) const
 {
-	return mDataList->getChildElement (rowNumber)->getIntAttribute ("Select");
+	return cl_ClientXml->getChildElement (rowNumber)->getIntAttribute ("Select");
 }
 
 void ClientList::setSelection (const int rowNumber, const int newSelection)
 {
-	mDataList->getChildElement (rowNumber)->setAttribute ("Select", newSelection);
+	cl_ClientXml->getChildElement (rowNumber)->setAttribute ("Select", newSelection);
 }
 
 juce::String ClientList::getText (const int columnNumber, const int rowNumber) const
 {
-	return mDataList->getChildElement (rowNumber)->getStringAttribute (getAttributeNameForColumnId (columnNumber));
+	return cl_ClientXml->getChildElement (rowNumber)->getStringAttribute (getAttributeNameForColumnId (columnNumber));
 }
 
 void ClientList::setText(const int columnNumber, const int rowNumber, const juce::String& newText)
 {
 	DBG("CALLING SET TEXT");
 	const auto& columnName = mTable.getHeader().getColumnName (columnNumber);
-	mDataList->getChildElement (rowNumber)->setAttribute (columnName, newText);
+	cl_ClientXml->getChildElement (rowNumber)->setAttribute (columnName, newText);
 }
 
 int ClientList::getLatestSelection()
@@ -175,63 +178,8 @@ juce::String ClientList::getAttributeNameForColumnId (const int columnId) const
 //===============GRAVEYARD==================
 
 
-// move to session
-//void ClientList::loadData()
-//{
-//	//	auto dir = juce::File::getCurrentWorkingDirectory();
-//	//	juce::String filePath = juce::File::getCurrentWorkingDirectory().getFullPathName();
-//	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
-//	auto dir = juce::File::getSpecialLocation(locationType);
-//
-//	int numTries = 0;
-//
-//	while (! dir.getChildFile ("Resources").exists() && numTries++ < 15)
-//		dir = dir.getParentDirectory();
-//
-//	auto tableFile = dir.getChildFile ("Resources").getChildFile ("SessionData.xml");
-//
-//	std::cout << tableFile.getFullPathName();
-//
-//	if (tableFile.exists())
-//	{
-//		DBG("TABLE FILE EXITS");
-//		clientData = juce::XmlDocument::parse (tableFile);            // [3]
-//
-//		mDataList   = clientData->getChildByName ("DATA");
-//		mColumnList = clientData->getChildByName ("HEADERS");          // [4]
-//
-//		mNumRows = mDataList->getNumChildElements();                      // [5]
-//	}
-//}
 
-// eventually move to session
-//void ClientList::loadTableHeaders()
-//{
-//	// reset all column headers before displaying, migtht result in bugs
-//	DBG("resetting columns...");
-//	resetColumns();
-//
-//	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
-//	auto dir = juce::File::getSpecialLocation(locationType);
-//
-//	int numTries = 0;
-//
-//	while (! dir.getChildFile ("Resources").exists() && numTries++ < 15)
-//		dir = dir.getParentDirectory();
-//
-//	auto tableFile = dir.getChildFile ("Resources").getChildFile ("SessionData.xml");
-//
-//	std::cout << tableFile.getFullPathName();
-//
-//	if (tableFile.exists())
-//	{
-//		DBG("TABLE FILE EXITS");
-//		clientData = juce::XmlDocument::parse (tableFile);            // [3]
-//
-////		doesn't make sense here to make a list of headers, since these will be defined by the software, when TableHeaders.xml is loaded, which provides headers
-//		mDataList   = clientData->getChildByName ("DATA");
-//		mColumnList = clientData->getChildByName ("HEADERS");          // [4]
-//
-//		mNumRows = mDataList->getNumChildElements();                      // [5]
-//	}
-//}
+
+
+
+

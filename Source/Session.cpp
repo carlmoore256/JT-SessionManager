@@ -7,8 +7,11 @@
 
 #include "Session.hpp"
 
-Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), sess_AllClientInfo("clientInfoXml_Session")
+Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip)
 {
+	//	a;;pcate to
+	sess_AllClientInfo = new XmlElement("clientInfoXml-Session");
+	
 	mClientList->setInitPtrs(sess_AllClients, &sess_AllClientInfo);
 	//	acquire resource directory for loading and saving
 	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
@@ -101,6 +104,8 @@ void Session::update()
 	// then take this selected client, and send update to infoPanel
 //	mInfoPanel.updateDisplay()
 	
+	auto test = sess_AllClientInfo.getChildElement(1);
+	DBG(String(test->getStringAttribute("Name")));
 	// update clientLists's xml of client stats. NOTE: I really hate it this way, what other ways can we provide proper column and row based information to ClientList::paintCell, which is an override called by other juce components? Edit the source? This just seems really inefficient to be constantly generating xml
 	
 //	mAllClientInfo = createClientXml(); // attempt to update this, but I realized everything should be referenced by pointers. If we pass clients a pointer to their new child element, they can just update that themselves
