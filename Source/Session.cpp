@@ -7,7 +7,7 @@
 
 #include "Session.hpp"
 
-Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip)
+Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), mAllClientInfo("allClientInfoXml")
 {
 	//	acquire resource directory for loading and saving
 	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
@@ -36,19 +36,29 @@ Session::~Session()
 {
     freeClients();
 }
-void Session::saveSession()
+
+void Session::saveSession(File sessionFileToSave)
 {
 	DBG("Saving Session...");
+	
+	XmlElement sessionXml("savedSessionXml");
+	
+	for (Client* client : mAllClients)
+		sessionXml.addChildElement(client->getClientInfo());
+	
+	auto xmlString = sessionXml.toString();
+	
+	// TODO - add way to save xmlString string
 }
 
-void Session::loadSession(juce::File sessionFile)
+void Session::loadSession(juce::File sessionFileToOpen)
 {
 	DBG("Loading Session...");
 	
-	if (sessionFile.exists())
+	if (sessionFileToOpen.exists())
 	{
 		std::unique_ptr<juce::XmlElement> clientData;
-		clientData = juce::XmlDocument::parse(sessionFile);
+		clientData = juce::XmlDocument::parse(sessionFileToOpen);
 		
 		juce::XmlElement* dataList = clientData->getChildByName ("DATA");
 		
@@ -57,7 +67,7 @@ void Session::loadSession(juce::File sessionFile)
 		
 		//	before we load session, we need to delete all existing column headers and replace them with whatever is in the header of the session file. This will only affect the horizontal sizing of cells from last session
 		mClientList->resetColumns();
-		loadTableHeaders(sessionFile);
+		loadTableHeaders(sessionFileToOpen);
 		
 		// 	delete existing clients; create a popup here that confirms if user wants to delete current session
 		freeClients();
@@ -81,10 +91,15 @@ void Session::loadSession(juce::File sessionFile)
 void Session::update()
 {
 	int selectedClient = mClientList->getLatestSelection();
-//	then take this selected client, and send update to infoPanel
+	// then take this selected client, and send update to infoPanel
+//	mInfoPanel.updateDisplay()
 	
+	// update clientLists's xml of client stats. NOTE: I really hate it this way, what other ways can we provide proper column and row based information to ClientList::paintCell, which is an override called by other juce components? Edit the source? This just seems really inefficient to be constantly generating xml
 	
-//	mInfoPanel
+//	mAllClientInfo = createClientXml(); // attempt to update this, but I realized everything should be referenced by pointers. If we pass clients a pointer to their new child element, they can just update that themselves
+	mClientList->setClientInfo(&mAllClientInfo); // assign clientInfo's pointer to xml here
+	// dont know if juce calls paintCell before or after this (probably before), meaning this is all around dumb
+
 }
 
 void Session::createClient(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage)
@@ -97,7 +112,6 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 		port = findEmptyPort();
 	
 
-//	DBG("NEW CLIENT " + name + " Port: " + juce::String(port) + " chan " + juce::String(channels));
 	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage, false); // last option startOnCreate=false for debugging, REMOVE ME!
 	
 	mAllClients.add(newClient);
@@ -170,7 +184,12 @@ void Session::loadTableHeaders(juce::File xmlTableHeaders)
 	}
 }
 
-void Session::clientDataToXml(Client* client)
+XmlElement Session::createClientXml()
 {
+	XmlElement allClientsXml("allClientsXml");
 	
+	for(Client* client : mAllClients)
+		allClientsXml.addChildElement(client->getClientInfo());
+
+	return allClientsXml;
 }

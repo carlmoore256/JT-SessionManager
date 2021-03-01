@@ -30,10 +30,10 @@ public:
 	
 	void update();
 	
-	void saveSession();
-	void loadSession(juce::File sessionFile);
+	void saveSession(File saveFile);
+	void loadSession(File openFile);
 	
-	void createClient(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage);
+	void createClient(String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage);
     
     void freeClients();
 	
@@ -43,6 +43,8 @@ public:
 private:
 	ClientList* mClientList;
 	InfoPanel* mInfoPanel;
+	
+	XmlElement mAllClientInfo;
 	
 	juce::Array<Client*> mAllClients;
 	
@@ -62,13 +64,11 @@ private:
 	juce::String findAlternateName(juce::String name);
 		
 	
-	// ==== LOADING / SAVING ==========
+	// ==== LOADING & SAVING ==========
 	
 	//	loads the headers of each column for mClientList from TableHeaders.xml
 	void loadTableHeaders(juce::File xmlTableHeaders);
 	
-	// used to load client data into an xml format, can be used by clientList to display info
-	void clientDataToXml(Client* client);
 	
-//	std::vector<juce::String> existingNames(); // returns vector of all names
+	XmlElement createClientXml();
 };

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <JUCERPROJECT id="LdB3G5" name="JT-SessionManager" projectType="guiapp" useAppConfig="0"
-              addUsingNamespaceToJuceHeader="0" displaySplashScreen="1" jucerFormatVersion="1">
+              addUsingNamespaceToJuceHeader="1" displaySplashScreen="1" jucerFormatVersion="1">
   <MAINGROUP id="IZtzWx" name="JT-SessionManager">
     <GROUP id="{2EF1699F-F794-E625-08C8-A8846EDD21DB}" name="Source">
       <FILE id="FwRz1n" name="InfoPanel.cpp" compile="1" resource="0" file="Source/InfoPanel.cpp"/>

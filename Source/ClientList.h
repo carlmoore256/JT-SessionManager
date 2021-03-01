@@ -94,7 +94,8 @@ public:
 	
 	int getLatestSelection();
 	
-
+	void setClientInfo(XmlElement* allClientXml) { mClientXml = allClientXml; };
+	
 private:
 	int mCurrentlySelectedRow;
 	bool mNewSelection;
@@ -106,6 +107,8 @@ private:
 //	std::unique_ptr<juce::XmlElement> clientData;
 	
 	juce::Array<Client*> cl_AllClients;
+	
+	XmlElement* mClientXml;
 	
 	juce::XmlElement* mColumnList = nullptr;
 	juce::XmlElement* mDataList = nullptr;

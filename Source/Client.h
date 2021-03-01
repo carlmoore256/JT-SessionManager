@@ -39,15 +39,28 @@ public:
 	
 	bool checkIfActive();
 	
-	//	returns xmlelement containing my info, for saving and displaying purposes. Consider making this a variable that is updated instead, which could improve performance by avoiding malloc
-	juce::XmlElement getClientInfo();
+	int getSkew()
+	{
+		if(mClientServer != nullptr)
+			return mClientServer->mSkew;
+		return 0;
+	}
 	
-//	std::map<std::string, float> getClientStats();
+	float getQuality()
+	{
+		if(mClientServer != nullptr)
+			return mClientServer->calculateQuality();
+		return 0.;
+	};
+	
+	//	returns xmlelement containing my info, for saving and displaying purposes. Consider making this a variable that is updated instead, which could improve performance by avoiding malloc
+	juce::XmlElement* getClientInfo();
 	
 private:
 	const juce::String mName;
-//	const std::string threadName = "test";
-
+	
+	// change this to a pointer reference to the session childElement, so whenever this is updated, we're only updating the session's version of mAllClientInfo
+	XmlElement mClientInfo;
 
 	int mPort;
 	int mChannels;
@@ -57,6 +70,9 @@ private:
 	bool mAutoManage;
 	
 	void startServer();
+	
+	// function to allocate new clientInfo to the heap
+	void recordClientInfo();
 	
 	// ==============================================================
 	
@@ -70,27 +86,29 @@ private:
 		
 		~ClientServer();
 		
-		bool isRunning();
+		bool isProcessRunning();
 		
 		void run() override;
 		
+		float calculateQuality();
+		
+		//	---metrics---
+		int mSkew;
+		
 	private:
 		Client& owner;
-//		juce::Thread& serverThread;
+		
+		//	---metrics---
+		float mQuality;
 		
 		ChildProcess childProcess;
-	//	std::thread* mServerThread;
 		
 		bool mProcessRunning;
 		bool mAllowRestart = true;
 		
 		juce::String generateCommand();
 		
-		//	---metrics---
-		float mQuality;
-		int mSkew;
-		
-		void startServer();
+		bool startServer();
 		void stopServer();
 		void filterOutput();
 	};

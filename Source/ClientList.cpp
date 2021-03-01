@@ -11,7 +11,6 @@
 ClientList::ClientList()
 {
 //	loadData();
-	mNumRows = 2;
 	addAndMakeVisible (mTable);
 
 	mTable.setColour (juce::ListBox::outlineColourId, juce::Colours::grey);
@@ -66,40 +65,16 @@ void ClientList::paintRowBackground (juce::Graphics& g, int rowNumber, int width
 		g.fillAll (alternateColour);
 }
 
-
+// consider calling this from the mainComponent, or passing reference of graphics g to session, which can then call this override
 void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 				int width, int height, bool rowIsSelected)
 {
 	g.setColour (rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour (juce::ListBox::textColourId));
 	g.setFont (font);
 	DBG("paintCell - rowNum " + juce::String(rowNumber) + " colId " + juce::String(columnId));
-	
-	juce::String cellText;
-	
-	switch (columnId) {
-		case 0:
-			cellText = juce::String(columnId);
-			break;
-
-		case 1:
-			cellText = cl_AllClients[rowNumber]->getName();
-			
-		case 2:
-			cellText = juce::String(cl_AllClients[rowNumber]->getPort());
-			
-		case 3:
-			cellText = juce::String(cl_AllClients[rowNumber]->getNumChannels());
-			
-		default:
-			break;
-	}
-	
-	for (Client* client : cl_AllClients)
-	{
-
-	}
-	
-	if (auto* rowElement = mDataList->getChildElement (rowNumber))
+		
+	// might be inefficient, look into how to implement getNextElement()
+	if (auto* rowElement = mClientXml->getChildElement (rowNumber))
 	{
 		auto text = rowElement->getStringAttribute (getAttributeNameForColumnId (columnId));
 

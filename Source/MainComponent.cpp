@@ -81,12 +81,19 @@ void MainComponent::buttonClicked(juce::Button* button)
 	if(button == &createClient_b)
 		DBG("CREATE A CLIENT!");
 	
-	if(button == &saveSession_b)
-		mSession.saveSession();
+
+//	saveSession and loadSession both require a file popup
+//	make these popup methods fileSavePopup and fileLoadPopup
 	
-//	loadSession requires a file popup
+//	JUCE component:
+//	FileChooserDialogBox
+	
+//	if(button == &saveSession_b)
+//		mSession.saveSession(fileSavePopup());
+//
 //	if(button == &loadSession_b)
-//		mSession.loadSession();
+//		mSession.loadSession(fileLoadPopup());
+
 }
 
 //=============================================================

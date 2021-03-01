@@ -10,7 +10,7 @@
 
 // ===========================================
 
-Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name)
+Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name), mClientInfo("CHANGEME")
 {
 	mPort = port;
 	mChannels = channels;
@@ -18,6 +18,8 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 	mZeroUnderrun = zeroUnderrun;
 	mAutoManage = autoManage;
 
+	// initialize mClientInfo
+	recordClientInfo();
 	
 	if (startOnCreate)
 	{
@@ -44,42 +46,47 @@ bool Client::compareName(juce::String name)
 
 bool Client::checkIfActive()
 {
-	return mClientServer->isRunning();
+	if(mClientServer != nullptr)
+		return 	mClientServer->isProcessRunning();
+	return false;
 }
 
-juce::XmlElement Client::getClientInfo()
+juce::XmlElement* Client::getClientInfo()
 {
-	juce::XmlElement clientInfo (mName);
-	
-//	juce::XmlElement
-	
+	recordClientInfo(); // update the info within the xmlElement
+	return &mClientInfo;
 }
-
-//std::map<std::string, float> Client::getClientStats()
-//{
-//	std::map<std::string, float> map;
-//
-//	map["port"] = (float)mPort;
-//	map["channels"] = (float)mChannels;
-////	map["quality"] = mQuality;
-////	map["skew"] = (float)mSkew;
-//
-//	return map;
-//}
 
 void Client::startServer()
 {
 	auto threadName = mName + "_proc";
 	mClientServer = new ClientServer(*this);
-	
+	// starts the thread, which then runs run(), which will start the server childProcess
 	mClientServer->startThread();
+}
+
+void Client::recordClientInfo()
+{
+	mClientInfo.setAttribute("ID", 0); //gotta figure out this id thing, maybe add mID
+	mClientInfo.setAttribute("Name", mName);
+	mClientInfo.setAttribute("Port", String(mPort));
+	mClientInfo.setAttribute("Channels", String(mChannels));
+	mClientInfo.setAttribute("RouteAudio", String(std::to_string(mAutoConnectAudio))); // had to do this, problem with juce::String conversion from bool
+	mClientInfo.setAttribute("ZeroUnderrun", String(std::to_string(mZeroUnderrun)));
+	mClientInfo.setAttribute("AutoManage", String(std::to_string(mAutoManage)));
+	mClientInfo.setAttribute("Connection", String(std::to_string(checkIfActive()))); // make this the connection status of connected/not connected (add a method to return str)
+	mClientInfo.setAttribute("Skew", String(getSkew()));
+	mClientInfo.setAttribute("Quality", String(getQuality()));
+	mClientInfo.setAttribute("Select", "0"); // this will actually be handled by ClientList, REMOVE ME
 }
 
 // ===========================================
 //const juce::String& threadName
 
 Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"), owner(parentClient)
-{}
+{
+	
+}
 
 
 Client::ClientServer::~ClientServer()
@@ -87,7 +94,7 @@ Client::ClientServer::~ClientServer()
 //	stopServer();
 }
 
-bool Client::ClientServer::isRunning()
+bool Client::ClientServer::isProcessRunning()
 {
 	return childProcess.isRunning();
 }
@@ -108,7 +115,7 @@ void Client::ClientServer::run()
 		DBG("THREAD RUNNING! \n");
 		
 		if(mAllowRestart)
-			startServer();
+			bool success = startServer();
 
 		while(mProcessRunning)
 		{
@@ -126,6 +133,13 @@ void Client::ClientServer::run()
 	stopServer();
 }
 
+float Client::ClientServer::calculateQuality()
+{
+	// build this up to calculate current quality
+	// look into how threading lib works beforehand, we dont want to call while memory is updated
+	return mQuality;
+}
+
 juce::String Client::ClientServer::generateCommand()
 {
 	juce::String command =
@@ -140,16 +154,17 @@ juce::String Client::ClientServer::generateCommand()
 }
 
 
-void Client::ClientServer::startServer()
+bool Client::ClientServer::startServer()
 {
 	DBG("attempting to start server");
-	
 	
 	if(childProcess.start (generateCommand(), wantStdOut | wantStdErr))
 	{
 		DBG("server opened");
 		mProcessRunning = true;
+		return true;
 	}
+	return false;
 }
 
 void Client::ClientServer::stopServer()
