@@ -25,8 +25,10 @@ public:
 	
 	~ClientList();
 	
-	//	send an array of clients, update the list based on this
-	void updateClientList(juce::Array<Client*> allClients);
+	//	pass pointer to allClients in Session
+	void setClientXmlPtr(juce::Array<Client*> allClients);
+	
+	void setInitPtrs(juce::Array<Client*> allClients, XmlElement* allClientXml);
 	
 //	possibly useful override:
 //	void cellClicked(int rowNumber int columnId, const juce::MouseEvent&) override { DBG("cell clicked "); };
@@ -94,7 +96,7 @@ public:
 	
 	int getLatestSelection();
 	
-	void setClientInfo(XmlElement* allClientXml) { mClientXml = allClientXml; };
+	void setClientInfo(XmlElement* allClientXml) { cl_ClientXml = allClientXml; };
 	
 private:
 	int mCurrentlySelectedRow;
@@ -108,7 +110,7 @@ private:
 	
 	juce::Array<Client*> cl_AllClients;
 	
-	XmlElement* mClientXml;
+	XmlElement* cl_ClientXml;
 	
 	juce::XmlElement* mColumnList = nullptr;
 	juce::XmlElement* mDataList = nullptr;

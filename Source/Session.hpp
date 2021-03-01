@@ -44,11 +44,13 @@ private:
 	ClientList* mClientList;
 	InfoPanel* mInfoPanel;
 	
-	XmlElement mAllClientInfo;
+	XmlElement sess_AllClientInfo;
 	
-	juce::Array<Client*> mAllClients;
+	juce::Array<Client*> sess_AllClients;
 	
-	std::unique_ptr<juce::XmlElement> mClientData;
+	//std::unique_ptr<juce::XmlElement> mClientData;
+	
+	Time mUpdateTime;
 
 	//	for loading listbox headers, and opening saved file directory automatically
 	juce::File mResourceDir;

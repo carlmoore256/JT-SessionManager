@@ -7,8 +7,9 @@
 
 #include "Session.hpp"
 
-Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), mAllClientInfo("allClientInfoXml")
+Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), sess_AllClientInfo("clientInfoXml_Session")
 {
+	mClientList->setInitPtrs(sess_AllClients, &sess_AllClientInfo);
 	//	acquire resource directory for loading and saving
 	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
 	auto dir = juce::File::getSpecialLocation(locationType);
@@ -29,6 +30,7 @@ Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip
 	createClient("test2", 1, 1, true, true, true);
 	createClient("test2", 2, 1, true, true, true);
 
+	mClientList->setNumRows(sess_AllClients.size());
 	DBG("LOADED SESSION");
 }
 
@@ -43,7 +45,7 @@ void Session::saveSession(File sessionFileToSave)
 	
 	XmlElement sessionXml("savedSessionXml");
 	
-	for (Client* client : mAllClients)
+	for (Client* client : sess_AllClients)
 		sessionXml.addChildElement(client->getClientInfo());
 	
 	auto xmlString = sessionXml.toString();
@@ -90,6 +92,11 @@ void Session::loadSession(juce::File sessionFileToOpen)
 
 void Session::update()
 {
+	auto t1 = Time::getHighResolutionTicks();
+//	getHighResolutionTicks()
+	
+	for(Client* c : sess_AllClients)
+		DBG(c->getName());
 	int selectedClient = mClientList->getLatestSelection();
 	// then take this selected client, and send update to infoPanel
 //	mInfoPanel.updateDisplay()
@@ -97,8 +104,11 @@ void Session::update()
 	// update clientLists's xml of client stats. NOTE: I really hate it this way, what other ways can we provide proper column and row based information to ClientList::paintCell, which is an override called by other juce components? Edit the source? This just seems really inefficient to be constantly generating xml
 	
 //	mAllClientInfo = createClientXml(); // attempt to update this, but I realized everything should be referenced by pointers. If we pass clients a pointer to their new child element, they can just update that themselves
-	mClientList->setClientInfo(&mAllClientInfo); // assign clientInfo's pointer to xml here
+	mClientList->setClientInfo(&sess_AllClientInfo); // assign clientInfo's pointer to xml here
 	// dont know if juce calls paintCell before or after this (probably before), meaning this is all around dumb
+	
+	auto updateTime = Time::getHighResolutionTicks() - t1;
+	DBG("update finished after " + String(updateTime));
 
 }
 
@@ -111,15 +121,14 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	if (port == -1) // -1 is default, will automatically find port
 		port = findEmptyPort();
 	
-
-	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage, false); // last option startOnCreate=false for debugging, REMOVE ME!
+	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage, true); // last option startOnCreate=false for debugging, REMOVE ME!
 	
-	mAllClients.add(newClient);
+	sess_AllClients.add(newClient);
 }
 
 void Session::freeClients()
 {
-    for (Client* client : mAllClients)
+    for (Client* client : sess_AllClients)
         delete client;
 }
 
@@ -130,7 +139,7 @@ int Session::findEmptyPort()
 	
 	juce::Array<int> takenPorts;
 	
-	for (Client* client : mAllClients)
+	for (Client* client : sess_AllClients)
 		takenPorts.add(client -> getPort());
 	
 	
@@ -142,7 +151,7 @@ int Session::findEmptyPort()
 
 bool Session::nameExists(juce::String name)
 {
-	for (Client* client : mAllClients)
+	for (Client* client : sess_AllClients)
 		if(client -> compareName(name))
 			return true;
 	return false;
@@ -188,7 +197,7 @@ XmlElement Session::createClientXml()
 {
 	XmlElement allClientsXml("allClientsXml");
 	
-	for(Client* client : mAllClients)
+	for(Client* client : sess_AllClients)
 		allClientsXml.addChildElement(client->getClientInfo());
 
 	return allClientsXml;

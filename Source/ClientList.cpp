@@ -25,11 +25,10 @@ ClientList::~ClientList()
 	
 }
 
-void ClientList::updateClientList(juce::Array<Client*> allClients)
+void ClientList::setInitPtrs(juce::Array<Client*> allClients, XmlElement* clientXml)
 {
-	
-	mNumRows = allClients.size();
-//	mNumRows 
+	cl_AllClients = allClients;
+	cl_ClientXml = clientXml;
 }
 
 void ClientList::resized()
@@ -74,7 +73,7 @@ void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 	DBG("paintCell - rowNum " + juce::String(rowNumber) + " colId " + juce::String(columnId));
 		
 	// might be inefficient, look into how to implement getNextElement()
-	if (auto* rowElement = mClientXml->getChildElement (rowNumber))
+	if (auto* rowElement = cl_ClientXml->getChildElement (rowNumber))
 	{
 		auto text = rowElement->getStringAttribute (getAttributeNameForColumnId (columnId));
 
