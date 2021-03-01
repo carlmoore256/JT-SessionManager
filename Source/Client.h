@@ -31,13 +31,18 @@ public:
 	
 	int getPort() { return mPort; };
 	
+	int getNumChannels() { return mChannels; };
+	
 	void setPort();
 	
 	bool compareName(juce::String name);
 	
 	bool checkIfActive();
 	
-	std::map<std::string, float> getClientStats();
+	//	returns xmlelement containing my info, for saving and displaying purposes. Consider making this a variable that is updated instead, which could improve performance by avoiding malloc
+	juce::XmlElement getClientInfo();
+	
+//	std::map<std::string, float> getClientStats();
 	
 private:
 	const juce::String mName;

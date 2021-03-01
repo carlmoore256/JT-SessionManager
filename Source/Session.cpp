@@ -22,8 +22,14 @@ Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip
 	
 //	createClient("test", 0, 1, true, true, true);
 	
-//	DELETE ME
-	loadSession(mResourceDir.getChildFile("SessionData.xml"));
+//	Make method to auto load last saved session
+//	loadSession(mResourceDir.getChildFile("SessionData.xml"));
+	
+	createClient("test1", 0, 1, true, true, true);
+	createClient("test2", 1, 1, true, true, true);
+	createClient("test2", 2, 1, true, true, true);
+
+	DBG("LOADED SESSION");
 }
 
 Session::~Session()
@@ -45,7 +51,6 @@ void Session::loadSession(juce::File sessionFile)
 		clientData = juce::XmlDocument::parse(sessionFile);
 		
 		juce::XmlElement* dataList = clientData->getChildByName ("DATA");
-		juce::XmlElement* columnList = clientData->getChildByName ("HEADERS");
 		
 		// 	set number of rows in clientList
 		mClientList->setNumRows(dataList->getNumChildElements());
@@ -87,11 +92,14 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	if(nameExists(name))
 		name = findAlternateName(name);
 	
-	if (port == -1) // -1 specified in interface to be no input
+	// add a checkIfPortUsed method, which may require a popup alterting user that port is already in use, in which case they can find next available or boot other client off port
+	if (port == -1) // -1 is default, will automatically find port
 		port = findEmptyPort();
 	
 
-	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage);
+//	DBG("NEW CLIENT " + name + " Port: " + juce::String(port) + " chan " + juce::String(channels));
+	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage, false); // last option startOnCreate=false for debugging, REMOVE ME!
+	
 	mAllClients.add(newClient);
 }
 
@@ -130,9 +138,9 @@ juce::String Session::findAlternateName(juce::String name)
 {
 	juce::String altName = name;
 	int i = 0;
-	while (nameExists(name))
+	while (nameExists(altName))
 	{
-		altName = name + juce::String(" (" + std::to_string(i) + ")");
+		altName = name + " (" + juce::String(i) + ")";
 		i++;
 	}
 	return altName;
@@ -159,6 +167,10 @@ void Session::loadTableHeaders(juce::File xmlTableHeaders)
 									 columnId.getIntValue(),
 									 width.getIntValue());
 		
-//		tableHeaders.add(name);
 	}
+}
+
+void Session::clientDataToXml(Client* client)
+{
+	
 }

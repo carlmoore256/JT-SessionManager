@@ -10,31 +10,12 @@
 
 ClientList::ClientList()
 {
-	
-	loadData();
+//	loadData();
+	mNumRows = 2;
 	addAndMakeVisible (mTable);
 
 	mTable.setColour (juce::ListBox::outlineColourId, juce::Colours::grey);
 	mTable.setOutlineThickness (1);
-
-//	if (mColumnList != nullptr)
-//	{
-//		forEachXmlChildElement(*mColumnList, columnXml)
-//		{
-//			DBG(columnXml->getStringAttribute ("name"));
-//			DBG(columnXml->getStringAttribute ("columnId"));
-//			DBG(columnXml->getStringAttribute ("width"));
-//			DBG("\n");
-//
-//
-//			mTable.getHeader().addColumn (columnXml->getStringAttribute ("name"),
-//										 columnXml->getIntAttribute ("columnId"),
-//										 columnXml->getIntAttribute ("width"),
-//										 50,
-//										 400,
-//										 juce::TableHeaderComponent::defaultFlags);
-//		}
-//	}
 
 	mTable.getHeader().setSortColumnId (1, true);
 	mTable.setMultipleSelectionEnabled (false);
@@ -45,6 +26,12 @@ ClientList::~ClientList()
 	
 }
 
+void ClientList::updateClientList(juce::Array<Client*> allClients)
+{
+	
+	mNumRows = allClients.size();
+//	mNumRows 
+}
 
 void ClientList::resized()
 {
@@ -60,38 +47,6 @@ void ClientList::addHeaderColumn(juce::String colName, int colID, int width, int
 								 400, // column max width
 								 juce::TableHeaderComponent::defaultFlags,
 								 -1); // insert index
-}
-
-// eventually move to session
-void ClientList::loadTableHeaders()
-{
-	// reset all column headers before displaying, migtht result in bugs
-	DBG("resetting columns...");
-	resetColumns();
-	
-	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
-	auto dir = juce::File::getSpecialLocation(locationType);
-	
-	int numTries = 0;
-
-	while (! dir.getChildFile ("Resources").exists() && numTries++ < 15)
-		dir = dir.getParentDirectory();
-	
-	auto tableFile = dir.getChildFile ("Resources").getChildFile ("SessionData.xml");
-	
-	std::cout << tableFile.getFullPathName();
-
-	if (tableFile.exists())
-	{
-		DBG("TABLE FILE EXITS");
-		clientData = juce::XmlDocument::parse (tableFile);            // [3]
-
-//		doesn't make sense here to make a list of headers, since these will be defined by the software, when TableHeaders.xml is loaded, which provides headers
-		mDataList   = clientData->getChildByName ("DATA");
-		mColumnList = clientData->getChildByName ("HEADERS");          // [4]
-
-		mNumRows = mDataList->getNumChildElements();                      // [5]
-	}
 }
 
 void ClientList::selectedRowsChanged(int lastRowSelected)
@@ -115,26 +70,46 @@ void ClientList::paintRowBackground (juce::Graphics& g, int rowNumber, int width
 void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 				int width, int height, bool rowIsSelected)
 {
-		g.setColour (rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour (juce::ListBox::textColourId));
-		g.setFont (font);
+	g.setColour (rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour (juce::ListBox::textColourId));
+	g.setFont (font);
+	DBG("paintCell - rowNum " + juce::String(rowNumber) + " colId " + juce::String(columnId));
+	
+	juce::String cellText;
+	
+	switch (columnId) {
+		case 0:
+			cellText = juce::String(columnId);
+			break;
 
+		case 1:
+			cellText = cl_AllClients[rowNumber]->getName();
+			
+		case 2:
+			cellText = juce::String(cl_AllClients[rowNumber]->getPort());
+			
+		case 3:
+			cellText = juce::String(cl_AllClients[rowNumber]->getNumChannels());
+			
+		default:
+			break;
+	}
+	
+	for (Client* client : cl_AllClients)
+	{
+
+	}
+	
 	if (auto* rowElement = mDataList->getChildElement (rowNumber))
-		{
-			auto text = rowElement->getStringAttribute (getAttributeNameForColumnId (columnId));
+	{
+		auto text = rowElement->getStringAttribute (getAttributeNameForColumnId (columnId));
 
-			g.drawText (text, 2, 0, width - 4, height, juce::Justification::centredLeft, true);
-		}
+		g.drawText (text, 2, 0, width - 4, height, juce::Justification::centredLeft, true);
+	}
 
-		g.setColour (getLookAndFeel().findColour (juce::ListBox::backgroundColourId));
-		g.fillRect (width - 1, 0, 1, height);
+	g.setColour (getLookAndFeel().findColour (juce::ListBox::backgroundColourId));
+	g.fillRect (width - 1, 0, 1, height);
 }
 
-
-
-int ClientList::getNumRows()
-{
-	return mNumRows;
-}
 
 void ClientList::sortOrderChanged (int newSortColumnId, bool isForwards)
 {
@@ -184,6 +159,7 @@ juce::String ClientList::getText (const int columnNumber, const int rowNumber) c
 
 void ClientList::setText(const int columnNumber, const int rowNumber, const juce::String& newText)
 {
+	DBG("CALLING SET TEXT");
 	const auto& columnName = mTable.getHeader().getColumnName (columnNumber);
 	mDataList->getChildElement (rowNumber)->setAttribute (columnName, newText);
 }
@@ -209,34 +185,6 @@ int ClientList::getLatestSelection()
 
 // ====== PRIVATE ========
 
-// move to session
-void ClientList::loadData()
-{
-	//	auto dir = juce::File::getCurrentWorkingDirectory();
-	//	juce::String filePath = juce::File::getCurrentWorkingDirectory().getFullPathName();
-	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
-	auto dir = juce::File::getSpecialLocation(locationType);
-	
-	int numTries = 0;
-
-	while (! dir.getChildFile ("Resources").exists() && numTries++ < 15)
-		dir = dir.getParentDirectory();
-	
-	auto tableFile = dir.getChildFile ("Resources").getChildFile ("SessionData.xml");
-	
-	std::cout << tableFile.getFullPathName();
-
-	if (tableFile.exists())
-	{
-		DBG("TABLE FILE EXITS");
-		clientData = juce::XmlDocument::parse (tableFile);            // [3]
-
-		mDataList   = clientData->getChildByName ("DATA");
-		mColumnList = clientData->getChildByName ("HEADERS");          // [4]
-
-		mNumRows = mDataList->getNumChildElements();                      // [5]
-	}
-}
 
 juce::String ClientList::getAttributeNameForColumnId (const int columnId) const
 {
@@ -250,4 +198,66 @@ juce::String ClientList::getAttributeNameForColumnId (const int columnId) const
 
 
 
-//=================================
+//===============GRAVEYARD==================
+
+
+// move to session
+//void ClientList::loadData()
+//{
+//	//	auto dir = juce::File::getCurrentWorkingDirectory();
+//	//	juce::String filePath = juce::File::getCurrentWorkingDirectory().getFullPathName();
+//	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
+//	auto dir = juce::File::getSpecialLocation(locationType);
+//
+//	int numTries = 0;
+//
+//	while (! dir.getChildFile ("Resources").exists() && numTries++ < 15)
+//		dir = dir.getParentDirectory();
+//
+//	auto tableFile = dir.getChildFile ("Resources").getChildFile ("SessionData.xml");
+//
+//	std::cout << tableFile.getFullPathName();
+//
+//	if (tableFile.exists())
+//	{
+//		DBG("TABLE FILE EXITS");
+//		clientData = juce::XmlDocument::parse (tableFile);            // [3]
+//
+//		mDataList   = clientData->getChildByName ("DATA");
+//		mColumnList = clientData->getChildByName ("HEADERS");          // [4]
+//
+//		mNumRows = mDataList->getNumChildElements();                      // [5]
+//	}
+//}
+
+// eventually move to session
+//void ClientList::loadTableHeaders()
+//{
+//	// reset all column headers before displaying, migtht result in bugs
+//	DBG("resetting columns...");
+//	resetColumns();
+//
+//	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
+//	auto dir = juce::File::getSpecialLocation(locationType);
+//
+//	int numTries = 0;
+//
+//	while (! dir.getChildFile ("Resources").exists() && numTries++ < 15)
+//		dir = dir.getParentDirectory();
+//
+//	auto tableFile = dir.getChildFile ("Resources").getChildFile ("SessionData.xml");
+//
+//	std::cout << tableFile.getFullPathName();
+//
+//	if (tableFile.exists())
+//	{
+//		DBG("TABLE FILE EXITS");
+//		clientData = juce::XmlDocument::parse (tableFile);            // [3]
+//
+////		doesn't make sense here to make a list of headers, since these will be defined by the software, when TableHeaders.xml is loaded, which provides headers
+//		mDataList   = clientData->getChildByName ("DATA");
+//		mColumnList = clientData->getChildByName ("HEADERS");          // [4]
+//
+//		mNumRows = mDataList->getNumChildElements();                      // [5]
+//	}
+//}

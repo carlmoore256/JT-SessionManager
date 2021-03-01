@@ -17,6 +17,7 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 	mAutoConnectAudio = autoConnectAudio;
 	mZeroUnderrun = zeroUnderrun;
 	mAutoManage = autoManage;
+
 	
 	if (startOnCreate)
 	{
@@ -35,8 +36,10 @@ Client::~Client()
 bool Client::compareName(juce::String name)
 {
 //	juce::String.compareNatural()
-	auto result = mName.compare(name);
-	return bool(result);
+	int result = mName.compare(name);
+	if (result==0) //compare name returns 0 if identical
+		return true;
+	return false;
 }
 
 bool Client::checkIfActive()
@@ -44,17 +47,25 @@ bool Client::checkIfActive()
 	return mClientServer->isRunning();
 }
 
-std::map<std::string, float> Client::getClientStats()
+juce::XmlElement Client::getClientInfo()
 {
-	std::map<std::string, float> map;
+	juce::XmlElement clientInfo (mName);
 	
-	map["port"] = (float)mPort;
-	map["channels"] = (float)mChannels;
-//	map["quality"] = mQuality;
-//	map["skew"] = (float)mSkew;
+//	juce::XmlElement
 	
-	return map;
 }
+
+//std::map<std::string, float> Client::getClientStats()
+//{
+//	std::map<std::string, float> map;
+//
+//	map["port"] = (float)mPort;
+//	map["channels"] = (float)mChannels;
+////	map["quality"] = mQuality;
+////	map["skew"] = (float)mSkew;
+//
+//	return map;
+//}
 
 void Client::startServer()
 {

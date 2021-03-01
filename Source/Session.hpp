@@ -46,7 +46,7 @@ private:
 	
 	juce::Array<Client*> mAllClients;
 	
-	std::unique_ptr<juce::XmlElement> clientData;
+	std::unique_ptr<juce::XmlElement> mClientData;
 
 	//	for loading listbox headers, and opening saved file directory automatically
 	juce::File mResourceDir;
@@ -66,6 +66,9 @@ private:
 	
 	//	loads the headers of each column for mClientList from TableHeaders.xml
 	void loadTableHeaders(juce::File xmlTableHeaders);
+	
+	// used to load client data into an xml format, can be used by clientList to display info
+	void clientDataToXml(Client* client);
 	
 //	std::vector<juce::String> existingNames(); // returns vector of all names
 };

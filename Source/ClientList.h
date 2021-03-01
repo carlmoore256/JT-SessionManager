@@ -11,7 +11,7 @@
 
 #include <JuceHeader.h>
 #include <stdio.h>
-//#include "Client.h"
+#include "Client.h"
 //#include "Session.hpp"
 
 //#endif /* ClientList_h */
@@ -25,11 +25,13 @@ public:
 	
 	~ClientList();
 	
-	void AddClient();
+	//	send an array of clients, update the list based on this
+	void updateClientList(juce::Array<Client*> allClients);
 	
-//	void selectedRowsChanged(int lastRowSelected) override;
+//	possibly useful override:
+//	void cellClicked(int rowNumber int columnId, const juce::MouseEvent&) override { DBG("cell clicked "); };
 	
-	int getNumRows() override;
+	int getNumRows() override { return mNumRows; };
 	
 	void resized() override;
 
@@ -60,35 +62,35 @@ public:
 	void setText (const int columnNumber, const int rowNumber, const juce::String& newText);
 	
 //	used to update a custom component in a cell
-	Component* refreshComponentForCell (int rowNumber, int columnId, bool /*isRowSelected*/,
-										Component* existingComponentToUpdate) override
-	{
-		if (columnId == 9)  // [8]
-		{
-			auto* selectionBox = static_cast<SelectionColumnCustomComponent*> (existingComponentToUpdate);
-
-			if (selectionBox == nullptr)
-				selectionBox = new SelectionColumnCustomComponent (*this);
-
-			selectionBox->setRowAndColumn (rowNumber, columnId);
-			return selectionBox;
-		}
-
-		if (columnId == 8)  // [9]
-		{
-			auto* textLabel = static_cast<EditableTextCustomComponent*> (existingComponentToUpdate);
-
-			if (textLabel == nullptr)
-				textLabel = new EditableTextCustomComponent (*this);
-
-			textLabel->setRowAndColumn (rowNumber, columnId);
-			return textLabel;
-		}
-
-		jassert (existingComponentToUpdate == nullptr);
-		return nullptr;     // [10]
-	};
-	
+//	Component* refreshComponentForCell (int rowNumber, int columnId, bool /*isRowSelected*/,
+//										Component* existingComponentToUpdate) override
+//	{
+//		if (columnId == 9)  // [8]
+//		{
+//			auto* selectionBox = static_cast<SelectionColumnCustomComponent*> (existingComponentToUpdate);
+//
+//			if (selectionBox == nullptr)
+//				selectionBox = new SelectionColumnCustomComponent (*this);
+//
+//			selectionBox->setRowAndColumn (rowNumber, columnId);
+//			return selectionBox;
+//		}
+//
+//		if (columnId == 8)  // [9]
+//		{
+//			auto* textLabel = static_cast<EditableTextCustomComponent*> (existingComponentToUpdate);
+//
+//			if (textLabel == nullptr)
+//				textLabel = new EditableTextCustomComponent (*this);
+//
+//			textLabel->setRowAndColumn (rowNumber, columnId);
+//			return textLabel;
+//		}
+//
+//		jassert (existingComponentToUpdate == nullptr);
+//		return nullptr;     // [10]
+//	};
+//	
 	
 	int getLatestSelection();
 	
@@ -101,7 +103,9 @@ private:
 	juce::Font font { 14.0f };
 	
 //	holds parsed xml
-	std::unique_ptr<juce::XmlElement> clientData;
+//	std::unique_ptr<juce::XmlElement> clientData;
+	
+	juce::Array<Client*> cl_AllClients;
 	
 	juce::XmlElement* mColumnList = nullptr;
 	juce::XmlElement* mDataList = nullptr;
@@ -112,7 +116,7 @@ private:
 	void mapClientData();
 	
 //	loads table headers from an existing xml file
-	void loadTableHeaders();
+//	void loadTableHeaders();
 	
 	class EditableTextCustomComponent  : public juce::Label
 	{
@@ -205,7 +209,7 @@ private:
 	};
 
 	//==============================================================================
-	void loadData();
+//	void loadData();
 
 	juce::String getAttributeNameForColumnId (const int columnId) const;
 
