@@ -95,13 +95,16 @@ private:
 		//	---metrics---
 		int mSkew;
 		
+		String test = "TEST!!!";
+
+		
 	private:
 		Client& owner;
 		
 		//	---metrics---
 		float mQuality;
 		
-		ChildProcess childProcess;
+		ChildProcess mChildProcess;
 		
 		bool mProcessRunning;
 		bool mAllowRestart = true;

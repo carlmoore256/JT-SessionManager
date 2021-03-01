@@ -18,14 +18,11 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 	mZeroUnderrun = zeroUnderrun;
 	mAutoManage = autoManage;
 
+//	if (startOnCreate)
+	startServer();
+	
 	// initialize mClientInfo
 	recordClientInfo();
-	
-	if (startOnCreate)
-	{
-		// start the server thread
-		startServer();
-	}
 }
 
 Client::~Client()
@@ -46,6 +43,7 @@ bool Client::compareName(juce::String name)
 
 bool Client::checkIfActive()
 {
+	DBG(mClientServer->test);
 	if(mClientServer != nullptr)
 		return 	mClientServer->isProcessRunning();
 	return false;
@@ -96,7 +94,7 @@ Client::ClientServer::~ClientServer()
 
 bool Client::ClientServer::isProcessRunning()
 {
-	return childProcess.isRunning();
+	return mChildProcess.isRunning();
 }
 
 void Client::ClientServer::run()
@@ -119,13 +117,13 @@ void Client::ClientServer::run()
 
 		while(mProcessRunning)
 		{
-			juce::String output = childProcess.readAllProcessOutput();
+			juce::String output = mChildProcess.readAllProcessOutput();
 			wait(500);
 
 //			int error = childProcess.getExitCode();
 		}
 //
-		wait(300);
+		wait(10);
 		
 //		add restart timeout stuff here
 	}
@@ -158,7 +156,7 @@ bool Client::ClientServer::startServer()
 {
 	DBG("attempting to start server");
 	
-	if(childProcess.start (generateCommand(), wantStdOut | wantStdErr))
+	if(mChildProcess.start (generateCommand(), wantStdOut | wantStdErr))
 	{
 		DBG("server opened");
 		mProcessRunning = true;
@@ -169,5 +167,6 @@ bool Client::ClientServer::startServer()
 
 void Client::ClientServer::stopServer()
 {
-	childProcess.kill();
+	DBG("stopping clientServer childProces (JT)");
+	mChildProcess.kill();
 }
