@@ -7,12 +7,12 @@
 
 #include "Session.hpp"
 
-Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip)
+Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), sess_AllClientInfo("clientInfoXml-Session")
 {
-	//	a;;pcate to
-	sess_AllClientInfo = new XmlElement("clientInfoXml-Session");
+//	sess_AllClientInfo = new XmlElement("clientInfoXml-Session");
 	
 	mClientList->setInitPtrs(sess_AllClients, &sess_AllClientInfo);
+	
 	//	acquire resource directory for loading and saving
 	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
 	auto dir = juce::File::getSpecialLocation(locationType);
@@ -23,9 +23,7 @@ Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip
 	mResourceDir = dir.getChildFile("Resources");
 	//	load the table headers
 	loadTableHeaders(mResourceDir.getChildFile("TableHeaders.xml"));
-	
-//	createClient("test", 0, 1, true, true, true);
-	
+
 //	Make method to auto load last saved session
 //	loadSession(mResourceDir.getChildFile("SessionData.xml"));
 	
@@ -34,12 +32,16 @@ Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip
 	createClient("test2", 2, 1, true, true, true);
 
 	mClientList->setNumRows(sess_AllClients.size());
+	
+
 	DBG("LOADED SESSION");
 }
 
 Session::~Session()
 {
     freeClients();
+	
+//	delete sess_AllClientInfo;
 }
 
 void Session::saveSession(File sessionFileToSave)
@@ -96,20 +98,16 @@ void Session::loadSession(juce::File sessionFileToOpen)
 void Session::update()
 {
 	auto t1 = Time::getHighResolutionTicks();
-//	getHighResolutionTicks()
 	
-	for(Client* c : sess_AllClients)
-		DBG(c->getName());
 	int selectedClient = mClientList->getLatestSelection();
 	// then take this selected client, and send update to infoPanel
 //	mInfoPanel.updateDisplay()
 	
-	auto test = sess_AllClientInfo.getChildElement(1);
-	DBG(String(test->getStringAttribute("Name")));
+	auto test = sess_AllClientInfo.getChildElement(0);
+	
+//	DBG(String(test->getStringAttribute("Name")));
 	// update clientLists's xml of client stats. NOTE: I really hate it this way, what other ways can we provide proper column and row based information to ClientList::paintCell, which is an override called by other juce components? Edit the source? This just seems really inefficient to be constantly generating xml
 	
-//	mAllClientInfo = createClientXml(); // attempt to update this, but I realized everything should be referenced by pointers. If we pass clients a pointer to their new child element, they can just update that themselves
-	mClientList->setClientInfo(&sess_AllClientInfo); // assign clientInfo's pointer to xml here
 	// dont know if juce calls paintCell before or after this (probably before), meaning this is all around dumb
 	
 	auto updateTime = Time::getHighResolutionTicks() - t1;
@@ -126,7 +124,10 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	if (port == -1) // -1 is default, will automatically find port
 		port = findEmptyPort();
 	
-	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage, true); // last option startOnCreate=false for debugging, REMOVE ME!
+	Client* newClient = new Client(name, port, channels, autoConnectAudio, zeroUnderrun, autoManage, true);
+	
+//	now get the pointer to its xmlElement, add it as a child to sessAllClientInfo
+	sess_AllClientInfo.addChildElement(newClient->getClientInfo());
 	
 	sess_AllClients.add(newClient);
 }
@@ -182,28 +183,34 @@ void Session::loadTableHeaders(juce::File xmlTableHeaders)
 	std::unique_ptr<juce::XmlElement> tableHeaderPtrs = juce::XmlDocument::parse(xmlTableHeaders);
 	
 	juce::XmlElement* columnList = tableHeaderPtrs->getChildByName ("HEADERS");
-
-	forEachXmlChildElement(*columnList, colXml)
-	{
-		auto name = colXml->getStringAttribute("name");
-//		DBG(name);
-		juce::String columnId = colXml->getStringAttribute("columnId");
-//		DBG("col id " + columnId);
-		juce::String width = colXml->getStringAttribute("width");
-		
-		mClientList->addHeaderColumn(name,
-									 columnId.getIntValue(),
-									 width.getIntValue());
-		
-	}
+	
+	mClientList->setColumnHeaders(columnList);
+//	forEachXmlChildElement(*columnList, colXml)
+//	{
+//		auto name = colXml->getStringAttribute("name");
+//		juce::String columnId = colXml->getStringAttribute("columnId");
+//		juce::String width = colXml->getStringAttribute("width");
+//
+//		mClientList->addHeaderColumn(columnList,
+//									 name,
+//									 columnId.getIntValue(),
+//									 width.getIntValue(),
+//									 25); // min width
+//	}
 }
 
-XmlElement Session::createClientXml()
+XmlElement Session::getClientXmlStats()
 {
 	XmlElement allClientsXml("allClientsXml");
 	
 	for(Client* client : sess_AllClients)
 		allClientsXml.addChildElement(client->getClientInfo());
-
+	DBG(allClientsXml.getAllSubText());
 	return allClientsXml;
+}
+
+void Session::broadcastClientUpdate()
+{
+	for(Client* client : sess_AllClients)
+		client->recordClientInfo(); // will update xmltree for clients part
 }

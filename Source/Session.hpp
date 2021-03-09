@@ -44,6 +44,7 @@ private:
 	ClientList* mClientList;
 	InfoPanel* mInfoPanel;
 	
+//	XmlElement* sess_AllClientInfo;
 	XmlElement sess_AllClientInfo;
 	
 	juce::Array<Client*> sess_AllClients;
@@ -72,5 +73,8 @@ private:
 	void loadTableHeaders(juce::File xmlTableHeaders);
 	
 	
-	XmlElement createClientXml();
+	XmlElement getClientXmlStats();
+	
+	// requests clients to refresh their internal stats reported at sess_AllClientInfo
+	void broadcastClientUpdate();
 };

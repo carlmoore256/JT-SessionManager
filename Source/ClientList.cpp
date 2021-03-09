@@ -36,6 +36,22 @@ void ClientList::resized()
 	mTable.setBoundsInset (juce::BorderSize<int> (8));
 }
 
+void ClientList::setColumnHeaders(XmlElement* headerList)
+{
+	forEachXmlChildElement(*headerList, colXml)
+	{
+		auto name = colXml->getStringAttribute("name");
+		juce::String columnId = colXml->getStringAttribute("columnId");
+		juce::String width = colXml->getStringAttribute("width");
+		
+		addHeaderColumn(name,
+						columnId.getIntValue(),
+						width.getIntValue(),
+						25); // min width
+	}
+	mHeaderList = headerList;
+};
+
 void ClientList::addHeaderColumn(juce::String colName, int colID, int width, int minWidth)
 {
 	mTable.getHeader().addColumn(colName, // name of column
@@ -76,7 +92,7 @@ void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 	DBG(test->getStringAttribute ("Name"));
 
 	// might be inefficient, look into how to implement getNextElement()
-	if (auto* rowElement = cl_ClientXml->getChildElement (rowNumber))
+	if (auto rowElement = cl_ClientXml->getChildElement (rowNumber))
 	{
 		auto text = rowElement->getStringAttribute (getAttributeNameForColumnId (columnId));
 
@@ -163,9 +179,9 @@ int ClientList::getLatestSelection()
 // ====== PRIVATE ========
 
 
-juce::String ClientList::getAttributeNameForColumnId (const int columnId) const
+String ClientList::getAttributeNameForColumnId (const int columnId) const
 {
-	forEachXmlChildElement(*mColumnList, columnXml)
+	forEachXmlChildElement(*mHeaderList, columnXml)
 	{
 		if (columnXml->getIntAttribute("columnId") == columnId)
 			return columnXml->getStringAttribute("name");

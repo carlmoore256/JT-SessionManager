@@ -10,7 +10,7 @@
 
 // ===========================================
 
-Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name), mClientInfo("CHANGEME")
+Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name), mClientStats("CHANGEME")
 {
 	mPort = port;
 	mChannels = channels;
@@ -52,7 +52,7 @@ bool Client::checkIfActive()
 juce::XmlElement* Client::getClientInfo()
 {
 	recordClientInfo(); // update the info within the xmlElement
-	return &mClientInfo;
+	return &mClientStats;
 }
 
 void Client::startServer()
@@ -63,19 +63,20 @@ void Client::startServer()
 	mClientServer->startThread();
 }
 
+// records stats to
 void Client::recordClientInfo()
 {
-	mClientInfo.setAttribute("ID", 0); //gotta figure out this id thing, maybe add mID
-	mClientInfo.setAttribute("Name", mName);
-	mClientInfo.setAttribute("Port", String(mPort));
-	mClientInfo.setAttribute("Channels", String(mChannels));
-	mClientInfo.setAttribute("RouteAudio", String(std::to_string(mAutoConnectAudio))); // had to do this, problem with juce::String conversion from bool
-	mClientInfo.setAttribute("ZeroUnderrun", String(std::to_string(mZeroUnderrun)));
-	mClientInfo.setAttribute("AutoManage", String(std::to_string(mAutoManage)));
-	mClientInfo.setAttribute("Connection", String(std::to_string(checkIfActive()))); // make this the connection status of connected/not connected (add a method to return str)
-	mClientInfo.setAttribute("Skew", String(getSkew()));
-	mClientInfo.setAttribute("Quality", String(getQuality()));
-	mClientInfo.setAttribute("Select", "0"); // this will actually be handled by ClientList, REMOVE ME
+	mClientStats.setAttribute("ID", 0); //gotta figure out this id thing, maybe add mID
+	mClientStats.setAttribute("Name", mName);
+	mClientStats.setAttribute("Port", String(mPort));
+	mClientStats.setAttribute("Channels", String(mChannels));
+	mClientStats.setAttribute("RouteAudio", String(std::to_string(mAutoConnectAudio))); // had to do this, problem with juce::String conversion from bool
+	mClientStats.setAttribute("ZeroUnderrun", String(std::to_string(mZeroUnderrun)));
+	mClientStats.setAttribute("AutoManage", String(std::to_string(mAutoManage)));
+	mClientStats.setAttribute("Connection", String(std::to_string(checkIfActive()))); // make this the connection status of connected/not connected (add a method to return str)
+	mClientStats.setAttribute("Skew", String(getSkew()));
+	mClientStats.setAttribute("Quality", String(getQuality()));
+	mClientStats.setAttribute("Select", "0"); // this will actually be handled by ClientList, REMOVE ME
 }
 
 // ===========================================

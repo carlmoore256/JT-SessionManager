@@ -23,7 +23,8 @@ class Client : juce::Component
 {
 public:
 	
-	Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate=true);
+	// clientInfo is its chunk on the ledger that client updates with stats
+	Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate);
 	
 	~Client();
 	
@@ -56,11 +57,14 @@ public:
 	//	returns xmlelement containing my info, for saving and displaying purposes. Consider making this a variable that is updated instead, which could improve performance by avoiding malloc
 	juce::XmlElement* getClientInfo();
 	
+	// function to allocate new clientInfo to the heap
+	void recordClientInfo();
+	
 private:
 	const juce::String mName;
 	
 	// change this to a pointer reference to the session childElement, so whenever this is updated, we're only updating the session's version of mAllClientInfo
-	XmlElement mClientInfo;
+	XmlElement mClientStats;
 
 	int mPort;
 	int mChannels;
@@ -70,9 +74,6 @@ private:
 	bool mAutoManage;
 	
 	void startServer();
-	
-	// function to allocate new clientInfo to the heap
-	void recordClientInfo();
 	
 	// ==============================================================
 	

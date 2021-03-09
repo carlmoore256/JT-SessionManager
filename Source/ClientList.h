@@ -36,8 +36,11 @@ public:
 	int getNumRows() override { return mNumRows; };
 	
 	void resized() override;
+	
+	// an initialization method that sets the headers of cols
+	void setColumnHeaders(XmlElement* headerList);
+	
 
-	void addHeaderColumn(juce::String colName, int colID, int width, int minWidth=30);
 		
 //	calls removeAllColumns on tableListBox's TableHeaderComponent
 	void resetColumns() { mTable.getHeader().removeAllColumns(); };
@@ -64,39 +67,39 @@ public:
 	void setText (const int columnNumber, const int rowNumber, const juce::String& newText);
 	
 //	used to update a custom component in a cell
-//	Component* refreshComponentForCell (int rowNumber, int columnId, bool /*isRowSelected*/,
-//										Component* existingComponentToUpdate) override
-//	{
-//		if (columnId == 9)  // [8]
-//		{
-//			auto* selectionBox = static_cast<SelectionColumnCustomComponent*> (existingComponentToUpdate);
-//
-//			if (selectionBox == nullptr)
-//				selectionBox = new SelectionColumnCustomComponent (*this);
-//
-//			selectionBox->setRowAndColumn (rowNumber, columnId);
-//			return selectionBox;
-//		}
-//
-//		if (columnId == 8)  // [9]
-//		{
-//			auto* textLabel = static_cast<EditableTextCustomComponent*> (existingComponentToUpdate);
-//
-//			if (textLabel == nullptr)
-//				textLabel = new EditableTextCustomComponent (*this);
-//
-//			textLabel->setRowAndColumn (rowNumber, columnId);
-//			return textLabel;
-//		}
-//
-//		jassert (existingComponentToUpdate == nullptr);
-//		return nullptr;     // [10]
-//	};
-//	
+	/*
+	Component* refreshComponentForCell (int rowNumber, int columnId, bool //isRowSelected,
+										Component* existingComponentToUpdate) override
+	{
+		if (columnId == 9)  // [8]
+		{
+			auto* selectionBox = static_cast<SelectionColumnCustomComponent*> (existingComponentToUpdate);
+
+			if (selectionBox == nullptr)
+				selectionBox = new SelectionColumnCustomComponent (*this);
+
+			selectionBox->setRowAndColumn (rowNumber, columnId);
+			return selectionBox;
+		}
+
+		if (columnId == 8)  // [9]
+		{
+			auto* textLabel = static_cast<EditableTextCustomComponent*> (existingComponentToUpdate);
+
+			if (textLabel == nullptr)
+				textLabel = new EditableTextCustomComponent (*this);
+
+			textLabel->setRowAndColumn (rowNumber, columnId);
+			return textLabel;
+		}
+
+		jassert (existingComponentToUpdate == nullptr);
+		return nullptr;     // [10]
+	};*/
 	
 	int getLatestSelection();
 	
-	void setClientInfo(XmlElement* allClientXml) { cl_ClientXml = allClientXml; };
+//	void setClientInfo(XmlElement* allClientXml) { cl_ClientXml = allClientXml; };
 	
 private:
 	int mCurrentlySelectedRow;
@@ -112,13 +115,15 @@ private:
 	
 	XmlElement* cl_ClientXml;
 	
-	juce::XmlElement* mColumnList = nullptr;
+	juce::XmlElement* mHeaderList = nullptr;
 	juce::XmlElement* mDataList = nullptr;
 	
 	int mNumRows = 0;
 	
 //	build out this function to take an xml row and convert into a client
 	void mapClientData();
+	
+	void addHeaderColumn(juce::String colName, int colID, int width, int minWidth=30);
 	
 //	loads table headers from an existing xml file
 //	void loadTableHeaders();
@@ -216,6 +221,6 @@ private:
 	//==============================================================================
 //	void loadData();
 
-	juce::String getAttributeNameForColumnId (const int columnId) const;
+	String getAttributeNameForColumnId (const int columnId) const;
 
 };

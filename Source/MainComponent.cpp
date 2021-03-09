@@ -79,6 +79,7 @@ void MainComponent::resized()
 void MainComponent::buttonClicked(juce::Button* button)
 {
 	if(button == &createClient_b)
+		mSession.createClient(nameInput_l.getText(), -1, 1, true, true, true);
 		DBG("CREATE A CLIENT!");
 	
 
