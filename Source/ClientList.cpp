@@ -38,6 +38,7 @@ void ClientList::resized()
 
 void ClientList::setColumnHeaders(XmlElement* headerList)
 {
+	// iterate through the columns and update the elements
 	forEachXmlChildElement(*headerList, colXml)
 	{
 		auto name = colXml->getStringAttribute("name");
@@ -49,6 +50,7 @@ void ClientList::setColumnHeaders(XmlElement* headerList)
 						width.getIntValue(),
 						25); // min width
 	}
+	// set the global var headerlist to the pointer passed from sess
 	mHeaderList = headerList;
 };
 

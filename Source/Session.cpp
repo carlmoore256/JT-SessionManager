@@ -180,9 +180,10 @@ juce::String Session::findAlternateName(juce::String name)
 void Session::loadTableHeaders(juce::File xmlTableHeaders)
 {
 //	FIRST, WE NEED TO DELETE ALL OF THE COLUMN HEADERS
-	std::unique_ptr<juce::XmlElement> tableHeaderPtrs = juce::XmlDocument::parse(xmlTableHeaders);
+//	std::unique_ptr<juce::XmlElement> tableHeaderPtrs = juce::XmlDocument::parse(xmlTableHeaders);
+	mTableHeadPtr = juce::XmlDocument::parse(xmlTableHeaders);
 	
-	juce::XmlElement* columnList = tableHeaderPtrs->getChildByName ("HEADERS");
+	juce::XmlElement* columnList = mTableHeadPtr->getChildByName ("HEADERS");
 	
 	mClientList->setColumnHeaders(columnList);
 //	forEachXmlChildElement(*columnList, colXml)

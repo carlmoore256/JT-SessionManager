@@ -56,9 +56,9 @@ private:
 	//	for loading listbox headers, and opening saved file directory automatically
 	juce::File mResourceDir;
 	
-	juce::XmlElement* mColumnList = nullptr;
-	juce::XmlElement* mDataList = nullptr;
-
+//	juce::XmlElement* mColumnList = nullptr;
+//	juce::XmlElement* mDataList = nullptr;
+	std::unique_ptr<juce::XmlElement> mTableHeadPtr;
 	
 	bool nameExists(juce::String name);
 	
