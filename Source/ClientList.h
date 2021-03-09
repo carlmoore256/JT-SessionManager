@@ -25,10 +25,7 @@ public:
 	
 	~ClientList();
 	
-	//	pass pointer to allClients in Session
-	void setClientXmlPtr(juce::Array<Client*> allClients);
-	
-	void setInitPtrs(juce::Array<Client*> allClients, XmlElement* allClientXml);
+	void setInitPtrs(OwnedArray<Client>* allClients, XmlElement* allClientXml);
 	
 //	possibly useful override:
 //	void cellClicked(int rowNumber int columnId, const juce::MouseEvent&) override { DBG("cell clicked "); };
@@ -111,7 +108,8 @@ private:
 //	holds parsed xml
 //	std::unique_ptr<juce::XmlElement> clientData;
 	
-	juce::Array<Client*> cl_AllClients;
+	//juce::Array<Client> cl_AllClients;
+	OwnedArray<Client>* cl_AllClients;
 	
 	XmlElement* cl_ClientXml;
 	

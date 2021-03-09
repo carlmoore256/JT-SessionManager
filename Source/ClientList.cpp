@@ -25,7 +25,7 @@ ClientList::~ClientList()
 	
 }
 
-void ClientList::setInitPtrs(juce::Array<Client*> allClients, XmlElement* clientXml)
+void ClientList::setInitPtrs(OwnedArray<Client>* allClients, XmlElement* clientXml)
 {
 	cl_AllClients = allClients;
 	cl_ClientXml = clientXml;

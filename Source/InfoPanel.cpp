@@ -83,20 +83,20 @@ void InfoPanel::resized()
 void InfoPanel::clearInfoDisplay()
 {
 	mPanelTitle.setText("Select or Create a Client", juce::dontSendNotification);
-	mPort.setText("-", juce::dontSendNotification);
-	mSkew.setText("-", juce::dontSendNotification);
-	mQuality.setText("-", juce::dontSendNotification);
-	mConnectStatus.setText("-", juce::dontSendNotification);
+	mPort.setText("Port: -", juce::dontSendNotification);
+	mSkew.setText("Skew: -", juce::dontSendNotification);
+	mQuality.setText("Quality: -", juce::dontSendNotification);
+	mConnectStatus.setText("Connection: -", juce::dontSendNotification);
 }
 
 void InfoPanel::updateDisplay(XmlElement* clientXml)
 {
 	// set the name
-	mPanelTitle.setText(clientXml->getStringAttribute("Name"), juce::dontSendNotification);
-	mPort.setText(clientXml->getStringAttribute("Port"), juce::dontSendNotification);
-	mSkew.setText(clientXml->getStringAttribute("Skew"), juce::dontSendNotification);
-	mQuality.setText(clientXml->getStringAttribute("Quality"), juce::dontSendNotification);
-	mConnectStatus.setText(clientXml->getStringAttribute("Connection"), juce::dontSendNotification);
+	mPanelTitle.setText("Name: " + clientXml->getStringAttribute("Name"), juce::dontSendNotification);
+	mPort.setText("Port: " + clientXml->getStringAttribute("Port"), juce::dontSendNotification);
+	mSkew.setText("Skew: " + clientXml->getStringAttribute("Skew"), juce::dontSendNotification);
+	mQuality.setText("Quality: " + clientXml->getStringAttribute("Quality"), juce::dontSendNotification);
+	mConnectStatus.setText("Connection: " + clientXml->getStringAttribute("Connection"), juce::dontSendNotification);
 }
 
 

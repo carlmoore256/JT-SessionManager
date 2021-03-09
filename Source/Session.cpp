@@ -11,7 +11,7 @@ Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip
 {
 //	sess_AllClientInfo = new XmlElement("clientInfoXml-Session");
 	
-	mClientList->setInitPtrs(sess_AllClients, &sess_AllClientInfo);
+	mClientList->setInitPtrs(&sess_AllClients, &sess_AllClientInfo);
 	
 	//	acquire resource directory for loading and saving
 	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
@@ -21,19 +21,20 @@ Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip
 	while (! dir.getChildFile ("Resources").exists() && numTries++ < 15)
 		dir = dir.getParentDirectory();
 	mResourceDir = dir.getChildFile("Resources");
+	
 	//	load the table headers
 	loadTableHeaders(mResourceDir.getChildFile("TableHeaders.xml"));
 
 //	Make method to auto load last saved session
+//	UNCOMMENT loadSession TO LOAD WHOLE SESSION, just like this now to avoid heavier load on debugging
 //	loadSession(mResourceDir.getChildFile("SessionData.xml"));
 	
 	createClient("test1", 0, 1, true, true, true);
 	createClient("test2", 1, 1, true, true, true);
 	createClient("test2", 2, 1, true, true, true);
 
-	mClientList->setNumRows(sess_AllClients.size());
+//	mClientList->setNumRows(sess_AllClients.size());
 	
-
 	DBG("LOADED SESSION");
 }
 
@@ -69,8 +70,8 @@ void Session::loadSession(juce::File sessionFileToOpen)
 		
 		juce::XmlElement* dataList = clientData->getChildByName ("DATA");
 		
-		// 	set number of rows in clientList
-		mClientList->setNumRows(dataList->getNumChildElements());
+		// we no longer set num rows here, instead each new client does that
+		// mClientList->setNumRows(dataList->getNumChildElements());
 		
 		//	before we load session, we need to delete all existing column headers and replace them with whatever is in the header of the session file. This will only affect the horizontal sizing of cells from last session
 		mClientList->resetColumns();
@@ -110,9 +111,8 @@ void Session::update()
 	//	mInfoPanel.updateDisplay()
 	mInfoPanel->updateDisplay(selectedClientInfo);
 	
-	auto updateTime = Time::getHighResolutionTicks() - t1;
-	DBG("update finished after " + String(updateTime));
-
+	if (debugSessionUpdateTime)
+		DBG("update finished after " + String(Time::getHighResolutionTicks() - t1));
 }
 
 void Session::createClient(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage)
@@ -130,6 +130,10 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	sess_AllClientInfo.addChildElement(newClient->getClientInfo());
 	
 	sess_AllClients.add(newClient);
+	
+	mClientList->setNumRows(sess_AllClients.size());
+	
+	DBG("NEW CLIENT " + name + " CREATED");
 }
 
 void Session::freeClients()
@@ -185,18 +189,6 @@ void Session::loadTableHeaders(juce::File xmlTableHeaders)
 	juce::XmlElement* columnList = mTableHeadPtr->getChildByName ("HEADERS");
 	
 	mClientList->setColumnHeaders(columnList);
-//	forEachXmlChildElement(*columnList, colXml)
-//	{
-//		auto name = colXml->getStringAttribute("name");
-//		juce::String columnId = colXml->getStringAttribute("columnId");
-//		juce::String width = colXml->getStringAttribute("width");
-//
-//		mClientList->addHeaderColumn(columnList,
-//									 name,
-//									 columnId.getIntValue(),
-//									 width.getIntValue(),
-//									 25); // min width
-//	}
 }
 
 XmlElement Session::getClientXmlStats()

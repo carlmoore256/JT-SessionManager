@@ -39,6 +39,7 @@ public:
 	
 	int findEmptyPort();
 	
+	bool debugSessionUpdateTime = false;
 		
 private:
 	ClientList* mClientList;
@@ -47,7 +48,9 @@ private:
 //	XmlElement* sess_AllClientInfo;
 	XmlElement sess_AllClientInfo;
 	
-	juce::Array<Client*> sess_AllClients;
+//	juce::Array<Client> sess_AllClients;s
+	// owned array will automatically delete elements when removed from the array. So consider getting rid of freeClients()
+	OwnedArray<Client> sess_AllClients;
 	
 	//std::unique_ptr<juce::XmlElement> mClientData;
 	
