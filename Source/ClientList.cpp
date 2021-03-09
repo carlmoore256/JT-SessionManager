@@ -88,10 +88,10 @@ void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 {
 	g.setColour (rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour (juce::ListBox::textColourId));
 	g.setFont (font);
-	DBG("paintCell - rowNum " + juce::String(rowNumber) + " colId " + juce::String(columnId));
+	//DBG("paintCell - rowNum " + juce::String(rowNumber) + " colId " + juce::String(columnId));
 	
 	auto test = cl_ClientXml->getChildElement(1);
-	DBG(test->getStringAttribute ("Name"));
+	//DBG(test->getStringAttribute ("Name"));
 
 	// might be inefficient, look into how to implement getNextElement()
 	if (auto rowElement = cl_ClientXml->getChildElement (rowNumber))

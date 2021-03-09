@@ -89,52 +89,28 @@ void InfoPanel::clearInfoDisplay()
 	mConnectStatus.setText("-", juce::dontSendNotification);
 }
 
-
-void InfoPanel::updateInfoDisplay(juce::String name, bool isConnected, int port, int skew, float quality)
+void InfoPanel::updateDisplay(XmlElement* clientXml)
 {
-	mPanelTitle.setText(name, juce::dontSendNotification);
-	mPort.setText(std::to_string(port), juce::dontSendNotification);
-	mSkew.setText(std::to_string(skew), juce::dontSendNotification);
-	mQuality.setText(std::to_string(quality), juce::dontSendNotification);
-	
-	if (isConnected)
-	{
-		mConnectStatus.setText("CONNECTED", juce::dontSendNotification);
-	} else {
-		mConnectStatus.setText("NOT CONNECTED", juce::dontSendNotification);
-	}
+	// set the name
+	mPanelTitle.setText(clientXml->getStringAttribute("Name"), juce::dontSendNotification);
+	mPort.setText(clientXml->getStringAttribute("Port"), juce::dontSendNotification);
+	mSkew.setText(clientXml->getStringAttribute("Skew"), juce::dontSendNotification);
+	mQuality.setText(clientXml->getStringAttribute("Quality"), juce::dontSendNotification);
+	mConnectStatus.setText(clientXml->getStringAttribute("Connection"), juce::dontSendNotification);
 }
 
-//juce::Array<juce::Rectangle<int>> InfoPanel::getSectionCells(int div_x, int div_y, int pad_x, int pad_y, int innerPad_x, int innerPad_y)
+
+//void InfoPanel::updateInfoDisplay(juce::String name, bool isConnected, int port, int skew, float quality)
 //{
-//	assert(div_x > 0 && div_y > 0);
+//	mPanelTitle.setText(name, juce::dontSendNotification);
+//	mPort.setText(std::to_string(port), juce::dontSendNotification);
+//	mSkew.setText(std::to_string(skew), juce::dontSendNotification);
+//	mQuality.setText(std::to_string(quality), juce::dontSendNotification);
 //
-//	juce::Array<juce::Rectangle<int>> allBounds;
-//
-////	auto area = getBoundsInParent();
-//	auto area = getLocalBounds();
-//	area.reduce(innerPad_x, innerPad_y);
-//	int columnWidth = area.getWidth() / div_x;
-//	int cellHeight = area.getHeight() / div_y;
-//
-//	for(int i = 0; i < div_x; i++)
+//	if (isConnected)
 //	{
-//		juce::Rectangle<int> thisColumn = area;
-//
-//		thisColumn.removeFromRight(columnWidth * (div_x - (i + 1)));
-//		thisColumn.removeFromLeft(columnWidth * i);
-//
-//		for(int j = 0; j < div_y; j++)
-//		{
-//			juce::Rectangle<int> thisCell = thisColumn;
-//			thisCell.removeFromTop(j * cellHeight);
-//			thisCell.setHeight(cellHeight);
-//
-//			thisCell.reduce(pad_x, pad_y);
-//
-//			allBounds.add(thisCell);
-//		}
+//		mConnectStatus.setText("CONNECTED", juce::dontSendNotification);
+//	} else {
+//		mConnectStatus.setText("NOT CONNECTED", juce::dontSendNotification);
 //	}
-//
-//	return allBounds;
 //}

@@ -24,7 +24,9 @@ public:
 	InfoPanel(int padding = 15, int innerPadding = 5);
 	~InfoPanel();
 	
-	void updateInfoDisplay(juce::String name, bool isConnected, int port, int skew, float quality);
+//	void updateInfoDisplay(juce::String name, bool isConnected, int port, int skew, float quality);
+	
+	void updateDisplay(XmlElement* clientXml);
 	
 	void clearInfoDisplay();
 	

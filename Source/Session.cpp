@@ -100,15 +100,15 @@ void Session::update()
 	auto t1 = Time::getHighResolutionTicks();
 	
 	int selectedClient = mClientList->getLatestSelection();
+
+	DBG("selected client " + String(selectedClient));
+	
+	// get the stats of currently selected client
+	auto selectedClientInfo = sess_AllClientInfo.getChildElement(selectedClient);
+	
 	// then take this selected client, and send update to infoPanel
-//	mInfoPanel.updateDisplay()
-	
-	auto test = sess_AllClientInfo.getChildElement(0);
-	
-//	DBG(String(test->getStringAttribute("Name")));
-	// update clientLists's xml of client stats. NOTE: I really hate it this way, what other ways can we provide proper column and row based information to ClientList::paintCell, which is an override called by other juce components? Edit the source? This just seems really inefficient to be constantly generating xml
-	
-	// dont know if juce calls paintCell before or after this (probably before), meaning this is all around dumb
+	//	mInfoPanel.updateDisplay()
+	mInfoPanel->updateDisplay(selectedClientInfo);
 	
 	auto updateTime = Time::getHighResolutionTicks() - t1;
 	DBG("update finished after " + String(updateTime));
@@ -179,8 +179,7 @@ juce::String Session::findAlternateName(juce::String name)
 
 void Session::loadTableHeaders(juce::File xmlTableHeaders)
 {
-//	FIRST, WE NEED TO DELETE ALL OF THE COLUMN HEADERS
-//	std::unique_ptr<juce::XmlElement> tableHeaderPtrs = juce::XmlDocument::parse(xmlTableHeaders);
+	//	FIRST, WE NEED TO DELETE ALL OF THE EXISTING COLUMN HEADERS
 	mTableHeadPtr = juce::XmlDocument::parse(xmlTableHeaders);
 	
 	juce::XmlElement* columnList = mTableHeadPtr->getChildByName ("HEADERS");
