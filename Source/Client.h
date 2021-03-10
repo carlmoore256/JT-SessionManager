@@ -9,6 +9,9 @@
 //#ifndef Client_hpp
 //#define Client_hpp
 
+// this is only for sleep(). probably a JUCE equivalent we should be using
+#include <unistd.h>
+
 #include <stdio.h>
 #include <JuceHeader.h>
 //#include <thread>
@@ -44,6 +47,7 @@ public:
 	{
 		if(mClientServer != nullptr)
 			return mClientServer->mSkew;
+        
 		return 0;
 	}
 	
@@ -53,7 +57,7 @@ public:
 			return mClientServer->calculateQuality();
 		return 0.;
 	};
-	
+	    
 	//	returns xmlelement containing my info, for saving and displaying purposes. Consider making this a variable that is updated instead, which could improve performance by avoiding malloc
 	juce::XmlElement* getClientInfo();
 	
@@ -92,6 +96,8 @@ private:
 		void run() override;
 		
 		float calculateQuality();
+        
+        bool stopJackTrip();
 		
 		//	---metrics---
 		int mSkew;

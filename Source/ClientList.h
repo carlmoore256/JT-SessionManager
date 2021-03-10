@@ -42,7 +42,7 @@ public:
 //	calls removeAllColumns on tableListBox's TableHeaderComponent
 	void resetColumns() { mTable.getHeader().removeAllColumns(); };
 
-	void setNumRows(int numRows) { mNumRows = numRows; };
+    void setNumRows(int numRows) { mNumRows = numRows; mTable.updateContent(); };
 	
 	void selectedRowsChanged (int lastRowSelected) override;
 	
@@ -104,7 +104,7 @@ private:
 	
 	juce::TableListBox mTable { {}, this };
 	juce::Font font { 14.0f };
-	
+    	
 //	holds parsed xml
 //	std::unique_ptr<juce::XmlElement> clientData;
 	

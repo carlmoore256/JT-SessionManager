@@ -29,7 +29,7 @@ Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip
 	
 	createClient("test1", 0, 1, true, true, true);
 	createClient("test2", 1, 1, true, true, true);
-	createClient("test2", 2, 1, true, true, true);
+	createClient("test3", 2, 1, true, true, true);
 
 //	mClientList->setNumRows(sess_AllClients.size());
 	

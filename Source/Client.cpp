@@ -10,7 +10,7 @@
 
 // ===========================================
 
-Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name), mClientStats("CHANGEME")
+Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name), mClientStats(name)
 {
 	mPort = port;
 	mChannels = channels;
@@ -27,9 +27,16 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 
 Client::~Client()
 {
-	DBG("CLIENT DESTRUCTOR CALLED!");
-	mClientServer->stopThread(500);
-	delete mClientServer;
+    
+    while(!mClientServer->stopJackTrip())
+        sleep(100);
+
+    DBG("JackTrip Stooppppeeeddd!");
+
+    mClientServer->stopThread(500);
+    delete mClientServer;
+
+    DBG("CLIENT DESTRUCTOR END!");
 }
 
 bool Client::compareName(juce::String name)
@@ -84,7 +91,7 @@ void Client::recordClientInfo()
 
 Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"), owner(parentClient)
 {
-	
+    mSkew = 0;
 }
 
 
@@ -116,6 +123,9 @@ void Client::ClientServer::run()
 		if(mAllowRestart)
 			bool success = startServer();
 
+        juce::String output = mChildProcess.readAllProcessOutput();
+
+        /*
 		while(mProcessRunning)
 		{
 			juce::String output = mChildProcess.readAllProcessOutput();
@@ -123,13 +133,14 @@ void Client::ClientServer::run()
 
 //			int error = childProcess.getExitCode();
 		}
+         */
 //
 		wait(10);
 		
 //		add restart timeout stuff here
 	}
 	
-	stopServer();
+//	stopServer();
 }
 
 float Client::ClientServer::calculateQuality()
@@ -137,6 +148,11 @@ float Client::ClientServer::calculateQuality()
 	// build this up to calculate current quality
 	// look into how threading lib works beforehand, we dont want to call while memory is updated
 	return mQuality;
+}
+
+bool Client::ClientServer::stopJackTrip()
+{
+    return mChildProcess.kill();
 }
 
 juce::String Client::ClientServer::generateCommand()
