@@ -31,7 +31,8 @@ public:
     enum CommandType
     {
         disconnect,
-        connect
+        connect,
+        listPort
     };
     
     void setSource(juce::String s);
