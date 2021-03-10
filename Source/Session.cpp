@@ -9,8 +9,6 @@
 
 Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), sess_AllClientInfo("clientInfoXml-Session")
 {
-//	sess_AllClientInfo = new XmlElement("clientInfoXml-Session");
-	
 	mClientList->setInitPtrs(&sess_AllClients, &sess_AllClientInfo);
 	
 	//	acquire resource directory for loading and saving
@@ -99,6 +97,9 @@ void Session::loadSession(juce::File sessionFileToOpen)
 void Session::update()
 {
 	auto t1 = Time::getHighResolutionTicks();
+	
+	// requests that clients record their xml info to the shared ptr sess_AllClientInfo
+	broadcastClientUpdate();
 	
 	int selectedClient = mClientList->getLatestSelection();
 
@@ -197,7 +198,6 @@ XmlElement Session::getClientXmlStats()
 	
 	for(Client* client : sess_AllClients)
 		allClientsXml.addChildElement(client->getClientInfo());
-	DBG(allClientsXml.getAllSubText());
 	return allClientsXml;
 }
 

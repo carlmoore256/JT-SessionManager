@@ -108,7 +108,7 @@ private:
 //	holds parsed xml
 //	std::unique_ptr<juce::XmlElement> clientData;
 	
-	//juce::Array<Client> cl_AllClients;
+	// actually we may not need this
 	OwnedArray<Client>* cl_AllClients;
 	
 	XmlElement* cl_ClientXml;

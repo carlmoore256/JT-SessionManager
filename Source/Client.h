@@ -96,9 +96,6 @@ private:
 		//	---metrics---
 		int mSkew;
 		
-		String test = "TEST!!!";
-
-		
 	private:
 		Client& owner;
 		

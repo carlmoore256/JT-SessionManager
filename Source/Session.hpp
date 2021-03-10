@@ -45,10 +45,9 @@ private:
 	ClientList* mClientList;
 	InfoPanel* mInfoPanel;
 	
-//	XmlElement* sess_AllClientInfo;
 	XmlElement sess_AllClientInfo;
 	
-//	juce::Array<Client> sess_AllClients;s
+//	juce::Array<Client> sess_AllClients;
 	// owned array will automatically delete elements when removed from the array. So consider getting rid of freeClients()
 	OwnedArray<Client> sess_AllClients;
 	
@@ -59,8 +58,6 @@ private:
 	//	for loading listbox headers, and opening saved file directory automatically
 	juce::File mResourceDir;
 	
-//	juce::XmlElement* mColumnList = nullptr;
-//	juce::XmlElement* mDataList = nullptr;
 	std::unique_ptr<juce::XmlElement> mTableHeadPtr;
 	
 	bool nameExists(juce::String name);

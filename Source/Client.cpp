@@ -43,7 +43,6 @@ bool Client::compareName(juce::String name)
 
 bool Client::checkIfActive()
 {
-	DBG(mClientServer->test);
 	if(mClientServer != nullptr)
 		return 	mClientServer->isProcessRunning();
 	return false;
@@ -66,6 +65,7 @@ void Client::startServer()
 // records stats to
 void Client::recordClientInfo()
 {
+//	DBG("recording " + mName + " info");
 	mClientStats.setAttribute("ID", 0); //gotta figure out this id thing, maybe add mID
 	mClientStats.setAttribute("Name", mName);
 	mClientStats.setAttribute("Port", String(mPort));
