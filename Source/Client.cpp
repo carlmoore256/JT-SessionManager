@@ -137,7 +137,7 @@ void Client::ClientServer::run()
          */
 //
 		wait(100);
-		DBG(owner.mName + "output: " + getProcessOutput());
+//		DBG(owner.mName + "output: " + getProcessOutput());
 //		add restart timeout stuff here
 	}
 	
@@ -164,7 +164,7 @@ String Client::ClientServer::getProcessOutput()
 	{
 		char buffer [512];
 		const int length = readProcessOutput(buffer, sizeof(buffer));
-		DBG("len of buff " + length);
+//		DBG("len of buff " + length);
 	//	if(length <= 0)
 	//		return "";
 		result.write(buffer, length);

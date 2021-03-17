@@ -17,13 +17,13 @@
 //#endif /* ClientList_h */
 
 
-class ClientList : public juce::Component,
+class ClientListbox : public juce::Component,
 				   public juce::TableListBoxModel
 {
 public:
-	ClientList();
+	ClientListbox();
 	
-	~ClientList();
+	~ClientListbox();
 	
 	void setInitPtrs(OwnedArray<Client>* allClients, XmlElement* allClientXml);
 	
@@ -129,7 +129,7 @@ private:
 	class EditableTextCustomComponent  : public juce::Label
 	{
 	public:
-		EditableTextCustomComponent (ClientList& td)
+		EditableTextCustomComponent (ClientListbox& td)
 			: owner (td)
 		{
 			setEditable (false, true, false);
@@ -155,7 +155,7 @@ private:
 		}
 
 	private:
-		ClientList& owner;
+		ClientListbox& owner;
 		int row, columnId;
 		juce::Colour textColour;
 	};
@@ -164,7 +164,7 @@ private:
 	class SelectionColumnCustomComponent    : public Component
 	{
 	public:
-		SelectionColumnCustomComponent (ClientList& td)
+		SelectionColumnCustomComponent (ClientListbox& td)
 			: owner (td)
 		{
 			addAndMakeVisible (toggleButton);
@@ -185,7 +185,7 @@ private:
 		}
 
 	private:
-		ClientList& owner;
+		ClientListbox& owner;
 		juce::ToggleButton toggleButton;
 		int row, columnId;
 	};

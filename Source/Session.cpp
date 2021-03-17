@@ -7,7 +7,7 @@
 
 #include "Session.hpp"
 
-Session::Session(ClientList* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), sess_AllClientInfo("clientInfoXml-Session")
+Session::Session(ClientListbox* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), sess_AllClientInfo("clientInfoXml-Session")
 {
 	mClientList->setInitPtrs(&sess_AllClients, &sess_AllClientInfo);
 	
@@ -125,7 +125,7 @@ void Session::update()
 	mInfoPanel->updateDisplay(selectedClientInfo);
 	
 	
-//	DBG(sess_AllClient[0]->getOutput());
+	DBG(sess_AllClients[0]->getOutput());
 	
 	if (debugSessionUpdateTime)
 		DBG("update finished after " + String(Time::getHighResolutionTicks() - t1));

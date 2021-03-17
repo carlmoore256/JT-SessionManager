@@ -1,7 +1,7 @@
 #pragma once
 
 #include <JuceHeader.h>
-#include "ClientList.h"
+#include "ClientListbox.h"
 #include "InfoPanel.hpp"
 #include "Session.hpp"
 #include "Section.hpp"
@@ -25,7 +25,7 @@ public:
 	void buttonClicked(juce::Button* button) override;
 
 private:
-	ClientList mClientList;
+	ClientListbox mClientList;
 	InfoPanel mInfoPanel;
 	Session mSession;
 	

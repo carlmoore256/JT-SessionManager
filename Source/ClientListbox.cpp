@@ -5,10 +5,10 @@
 //  Created by Carl Moore on 2/17/21.
 //
 
-#include "ClientList.h"
+#include "ClientListbox.h"
 
 
-ClientList::ClientList()
+ClientListbox::ClientListbox()
 {
 //	loadData();
 	addAndMakeVisible (mTable);
@@ -20,23 +20,23 @@ ClientList::ClientList()
 	mTable.setMultipleSelectionEnabled (false);
 }
 
-ClientList::~ClientList()
+ClientListbox::~ClientListbox()
 {
 	
 }
 
-void ClientList::setInitPtrs(OwnedArray<Client>* allClients, XmlElement* clientXml)
+void ClientListbox::setInitPtrs(OwnedArray<Client>* allClients, XmlElement* clientXml)
 {
 	cl_AllClients = allClients;
 	cl_ClientXml = clientXml;
 }
 
-void ClientList::resized()
+void ClientListbox::resized()
 {
 	mTable.setBoundsInset (juce::BorderSize<int> (8));
 }
 
-void ClientList::setColumnHeaders(XmlElement* headerList)
+void ClientListbox::setColumnHeaders(XmlElement* headerList)
 {
 	// iterate through the columns and update the elements
 	forEachXmlChildElement(*headerList, colXml)
@@ -54,7 +54,7 @@ void ClientList::setColumnHeaders(XmlElement* headerList)
 	mHeaderList = headerList;
 };
 
-void ClientList::addHeaderColumn(juce::String colName, int colID, int width, int minWidth)
+void ClientListbox::addHeaderColumn(juce::String colName, int colID, int width, int minWidth)
 {
 	mTable.getHeader().addColumn(colName, // name of column
 								 colID, // column id
@@ -65,7 +65,7 @@ void ClientList::addHeaderColumn(juce::String colName, int colID, int width, int
 								 -1); // insert index
 }
 
-void ClientList::selectedRowsChanged(int lastRowSelected)
+void ClientListbox::selectedRowsChanged(int lastRowSelected)
 {
 	DBG("row selected: " + std::to_string(lastRowSelected));
 	mCurrentlySelectedRow = lastRowSelected;
@@ -73,7 +73,7 @@ void ClientList::selectedRowsChanged(int lastRowSelected)
 }
 
 
-void ClientList::paintRowBackground (juce::Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
+void ClientListbox::paintRowBackground (juce::Graphics& g, int rowNumber, int width, int height, bool rowIsSelected)
 {
 	auto alternateColour = getLookAndFeel().findColour (juce::ListBox::backgroundColourId).interpolatedWith (getLookAndFeel().findColour (juce::ListBox::textColourId), 0.03f);
 	if (rowIsSelected)
@@ -83,7 +83,7 @@ void ClientList::paintRowBackground (juce::Graphics& g, int rowNumber, int width
 }
 
 // consider calling this from the mainComponent, or passing reference of graphics g to session, which can then call this override
-void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
+void ClientListbox :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 				int width, int height, bool rowIsSelected)
 {
 	g.setColour (rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour (juce::ListBox::textColourId));
@@ -102,7 +102,7 @@ void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 }
 
 
-void ClientList::sortOrderChanged (int newSortColumnId, bool isForwards)
+void ClientListbox::sortOrderChanged (int newSortColumnId, bool isForwards)
 {
 	if (newSortColumnId != 0)
 	{
@@ -113,7 +113,7 @@ void ClientList::sortOrderChanged (int newSortColumnId, bool isForwards)
 	}
 }
 
-int ClientList::getColumnAutoSizeWidth(int columnId)
+int ClientListbox::getColumnAutoSizeWidth(int columnId)
 {
 	if (columnId == 9)
 		return 50;
@@ -133,28 +133,28 @@ int ClientList::getColumnAutoSizeWidth(int columnId)
 	return widest + 8;
 }
 
-int ClientList::getSelection (const int rowNumber) const
+int ClientListbox::getSelection (const int rowNumber) const
 {
 	return cl_ClientXml->getChildElement (rowNumber)->getIntAttribute ("Select");
 }
 
-void ClientList::setSelection (const int rowNumber, const int newSelection)
+void ClientListbox::setSelection (const int rowNumber, const int newSelection)
 {
 	cl_ClientXml->getChildElement (rowNumber)->setAttribute ("Select", newSelection);
 }
 
-juce::String ClientList::getText (const int columnNumber, const int rowNumber) const
+juce::String ClientListbox::getText (const int columnNumber, const int rowNumber) const
 {
 	return cl_ClientXml->getChildElement (rowNumber)->getStringAttribute (getAttributeNameForColumnId (columnNumber));
 }
 
-void ClientList::setText(const int columnNumber, const int rowNumber, const juce::String& newText)
+void ClientListbox::setText(const int columnNumber, const int rowNumber, const juce::String& newText)
 {
 	const auto& columnName = mTable.getHeader().getColumnName (columnNumber);
 	cl_ClientXml->getChildElement (rowNumber)->setAttribute (columnName, newText);
 }
 
-int ClientList::getLatestSelection()
+int ClientListbox::getLatestSelection()
 {
 //	return mNewSelection;
 	bool newSelection = mNewSelection;
@@ -176,7 +176,7 @@ int ClientList::getLatestSelection()
 // ====== PRIVATE ========
 
 
-String ClientList::getAttributeNameForColumnId (const int columnId) const
+String ClientListbox::getAttributeNameForColumnId (const int columnId) const
 {
 	forEachXmlChildElement(*mHeaderList, columnXml)
 	{

@@ -11,7 +11,7 @@
 #include <stdio.h>
 #include <JuceHeader.h>
 
-#include "ClientList.h"
+#include "ClientListbox.h"
 #include "InfoPanel.hpp"
 #include "Client.h"
 
@@ -25,7 +25,7 @@
 class Session : public juce::Component
 {
 public:
-	Session(ClientList* cl, InfoPanel* ip);
+	Session(ClientListbox* cl, InfoPanel* ip);
 	~Session();
 	
 	void update();
@@ -42,7 +42,7 @@ public:
 	bool debugSessionUpdateTime = false;
 		
 private:
-	ClientList* mClientList;
+	ClientListbox* mClientList;
 	InfoPanel* mInfoPanel;
 	
 	XmlElement sess_AllClientInfo;
