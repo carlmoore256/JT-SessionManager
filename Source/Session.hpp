@@ -30,8 +30,8 @@ public:
 	
 	void update();
 	
-	void saveSession(File saveFile);
-	void loadSession(File openFile);
+	void saveSession();
+	void loadSession();
 	
 	void createClient(String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage);
     

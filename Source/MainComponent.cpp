@@ -94,7 +94,7 @@ void MainComponent::buttonClicked(juce::Button* button)
 //	FileChooserDialogBox
 	
 	if(button == &saveSession_b)
-		mSession.saveSession(fileSavePopup());
+		mSession.saveSession();
 
 //	if(button == &loadSession_b)
 //		mSession.loadSession(fileLoadPopup());

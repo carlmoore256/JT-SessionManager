@@ -43,30 +43,37 @@ Session::~Session()
 //	delete sess_AllClientInfo;
 }
 
-void Session::saveSession(File sessionFileToSave)
+void Session::saveSession()
 {
 	DBG("Saving Session...");
 	
-	XmlElement sessionXml("savedSessionXml");
+//	XmlElement sessionXml("savedSessionXml");
+//	for (Client* client : sess_AllClients)
+//		sessionXml.addChildElement(client->getClientInfo());
 	
-	for (Client* client : sess_AllClients)
-		sessionXml.addChildElement(client->getClientInfo());
-	
-	auto xmlString = sessionXml.toString();
+	auto xmlString = sess_AllClientInfo.toString();
 		
 	FileChooser fc("Save Session", mResourceDir);
 	
 	if (fc.browseForFileToSave(true))
 	{
-		auto saveFile = fc.getResult();
+		File saveFile = fc.getResult();
+		saveFile.withFileExtension("xml").replaceWithText(xmlString);
 	}
-	
-	// TODO - add way to save xmlString string
 }
 
-void Session::loadSession(juce::File sessionFileToOpen)
+void Session::loadSession()
 {
 	DBG("Loading Session...");
+	
+	FileChooser fc("Load Session", mResourceDir);
+	
+	File sessionFileToOpen;
+	
+	if (fc.browseForFileToOpen())
+	{
+		sessionFileToOpen = fc.getResult();
+	}
 	
 	if (sessionFileToOpen.exists())
 	{
@@ -116,6 +123,9 @@ void Session::update()
 	// then take this selected client, and send update to infoPanel
 	//	mInfoPanel.updateDisplay()
 	mInfoPanel->updateDisplay(selectedClientInfo);
+	
+	
+//	DBG(sess_AllClient[0]->getOutput());
 	
 	if (debugSessionUpdateTime)
 		DBG("update finished after " + String(Time::getHighResolutionTicks() - t1));
