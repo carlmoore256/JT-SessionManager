@@ -57,6 +57,13 @@ public:
 			return mClientServer->calculateQuality();
 		return 0.;
 	};
+	
+	String getOutput()
+	{
+		if(mClientServer != nullptr)
+			return mClientServer->getProcessOutput();
+		return "";
+	};
 	    
 	//	returns xmlelement containing my info, for saving and displaying purposes. Consider making this a variable that is updated instead, which could improve performance by avoiding malloc
 	juce::XmlElement* getClientInfo();
@@ -99,6 +106,8 @@ private:
         
         bool stopJackTrip();
 		
+		String getProcessOutput();
+		
 		//	---metrics---
 		int mSkew;
 		
@@ -112,6 +121,11 @@ private:
 		
 		bool mProcessRunning;
 		bool mAllowRestart = true;
+		
+		// is the jacktrip process actually running
+		bool mJacktripRunning = false;
+		// should it run (useful for auto restart)
+		bool mJacktripShouldRun = true;
 		
 		juce::String generateCommand();
 		

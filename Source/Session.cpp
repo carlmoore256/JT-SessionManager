@@ -53,6 +53,13 @@ void Session::saveSession(File sessionFileToSave)
 		sessionXml.addChildElement(client->getClientInfo());
 	
 	auto xmlString = sessionXml.toString();
+		
+	FileChooser fc("Save Session", mResourceDir);
+	
+	if (fc.browseForFileToSave(true))
+	{
+		auto saveFile = fc.getResult();
+	}
 	
 	// TODO - add way to save xmlString string
 }
@@ -102,8 +109,6 @@ void Session::update()
 	broadcastClientUpdate();
 	
 	int selectedClient = mClientList->getLatestSelection();
-
-	DBG("selected client " + String(selectedClient));
 	
 	// get the stats of currently selected client
 	auto selectedClientInfo = sess_AllClientInfo.getChildElement(selectedClient);
@@ -174,7 +179,7 @@ juce::String Session::findAlternateName(juce::String name)
 	int i = 0;
 	while (nameExists(altName))
 	{
-		altName = name + " (" + juce::String(i) + ")";
+		altName = name + " " + juce::String(i);
 		i++;
 	}
 	return altName;

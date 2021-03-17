@@ -10,7 +10,7 @@
 
 // ===========================================
 
-Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name), mClientStats(name)
+Client::Client(juce::String name, int port, int channels, bool autoConnectAudio, bool zeroUnderrun, bool autoManage, bool startOnCreate) : mName(name), mClientStats("changeme")
 {
 	mPort = port;
 	mChannels = channels;
@@ -27,14 +27,14 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 
 Client::~Client()
 {
-    
+    // watch out for this, figure out why jt can't be stopped
     while(!mClientServer->stopJackTrip())
         sleep(100);
 
-    DBG("JackTrip Stooppppeeeddd!");
+    DBG("JackTrip Stopped!");
 
     mClientServer->stopThread(500);
-    delete mClientServer;
+//    delete mClientServer;
 
     DBG("CLIENT DESTRUCTOR END!");
 }
@@ -84,6 +84,7 @@ void Client::recordClientInfo()
 	mClientStats.setAttribute("Skew", String(getSkew()));
 	mClientStats.setAttribute("Quality", String(getQuality()));
 	mClientStats.setAttribute("Select", "0"); // this will actually be handled by ClientList, REMOVE ME
+	mClientStats.setAttribute("stdout", "\n" + getOutput());
 }
 
 // ===========================================
@@ -118,13 +119,13 @@ void Client::ClientServer::run()
 	
 	while(!threadShouldExit())
 	{
-		DBG("THREAD RUNNING! \n");
+		if(!mJacktripRunning && mJacktripShouldRun)
+		{
+			mJacktripRunning = startServer();
+		}
+
+//        juce::String output = mChildProcess.readAllProcessOutput();
 		
-		if(mAllowRestart)
-			bool success = startServer();
-
-        juce::String output = mChildProcess.readAllProcessOutput();
-
         /*
 		while(mProcessRunning)
 		{
@@ -135,8 +136,8 @@ void Client::ClientServer::run()
 		}
          */
 //
-		wait(10);
-		
+		wait(100);
+		DBG(owner.mName + "output: " + getProcessOutput());
 //		add restart timeout stuff here
 	}
 	
@@ -155,8 +156,27 @@ bool Client::ClientServer::stopJackTrip()
     return mChildProcess.kill();
 }
 
+String Client::ClientServer::getProcessOutput()
+{
+	MemoryOutputStream result;
+	
+	for(int i = 0; i < 100; i++)
+	{
+		char buffer [512];
+		const int length = readProcessOutput(buffer, sizeof(buffer));
+		DBG("len of buff " + length);
+	//	if(length <= 0)
+	//		return "";
+		result.write(buffer, length);
+	}
+
+	return result.toString();
+}
+
 juce::String Client::ClientServer::generateCommand()
 {
+	// overly complicated bs I gotta figure out
+//	String nameNoSpaces = owner.mName.replaceCharacter(test.getCharPointer(), "");
 	juce::String command =
 	"/usr/local/bin/jacktrip"
 	" -n " + juce::String(owner.mChannels) +
@@ -165,6 +185,7 @@ juce::String Client::ClientServer::generateCommand()
 	" -o " + juce::String(owner.mPort) +
 	" --iostat 1";
 	
+//	command = String("ls -a");
 	return command;
 }
 

@@ -28,6 +28,8 @@ InfoPanel::InfoPanel(int padding, int innerPadding) : Section(3, 8, padding, pad
 	
 	
 	addAndMakeVisible(mConsole);
+	mConsole.setReadOnly(true);
+	mConsole.setMultiLine(true);
 }
 
 InfoPanel::~InfoPanel()
@@ -44,9 +46,8 @@ void InfoPanel::paint(juce::Graphics& g)
 	g.setColour(juce::Colours::darkgrey);
 	g.fillRect(area);
 	
-	
-//	g.setColour(mPanelColor);
-	g.setColour(juce::Colours::red);
+	Colour c(38, 39, 41);
+	g.setColour(c);
 	
 //	g.fillRect(getCellAt(0,0));
 	
@@ -97,20 +98,6 @@ void InfoPanel::updateDisplay(XmlElement* clientXml)
 	mSkew.setText("Skew: " + clientXml->getStringAttribute("Skew"), juce::dontSendNotification);
 	mQuality.setText("Quality: " + clientXml->getStringAttribute("Quality"), juce::dontSendNotification);
 	mConnectStatus.setText("Connection: " + clientXml->getStringAttribute("Connection"), juce::dontSendNotification);
+	
+	mConsole.setText(clientXml->getStringAttribute("stdout"));
 }
-
-
-//void InfoPanel::updateInfoDisplay(juce::String name, bool isConnected, int port, int skew, float quality)
-//{
-//	mPanelTitle.setText(name, juce::dontSendNotification);
-//	mPort.setText(std::to_string(port), juce::dontSendNotification);
-//	mSkew.setText(std::to_string(skew), juce::dontSendNotification);
-//	mQuality.setText(std::to_string(quality), juce::dontSendNotification);
-//
-//	if (isConnected)
-//	{
-//		mConnectStatus.setText("CONNECTED", juce::dontSendNotification);
-//	} else {
-//		mConnectStatus.setText("NOT CONNECTED", juce::dontSendNotification);
-//	}
-//}

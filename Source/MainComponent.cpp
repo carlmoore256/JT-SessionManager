@@ -41,13 +41,17 @@ void MainComponent::paint (juce::Graphics& g)
 	
 	g.fillAll (getLookAndFeel().findColour (juce::ResizableWindow::backgroundColourId));
 	
-	g.setColour(juce::Colours::green);
+	// implement this in lookandfeel
+	Colour c(38, 39, 41);
+	
+	g.setColour(c);
+	g.setColour(c);
 	auto topBar = getMergedRow(0);
 	g.fillRect(topBar);
 	
 	auto bottomBar = getMergedRows(7,8);
 	
-	g.setColour(juce::Colours::green);
+	g.setColour(c);
 	g.fillRect(bottomBar);
 
 }
@@ -89,9 +93,9 @@ void MainComponent::buttonClicked(juce::Button* button)
 //	JUCE component:
 //	FileChooserDialogBox
 	
-//	if(button == &saveSession_b)
-//		mSession.saveSession(fileSavePopup());
-//
+	if(button == &saveSession_b)
+		mSession.saveSession(fileSavePopup());
+
 //	if(button == &loadSession_b)
 //		mSession.loadSession(fileLoadPopup());
 

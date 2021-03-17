@@ -86,26 +86,14 @@ void ClientList::paintRowBackground (juce::Graphics& g, int rowNumber, int width
 void ClientList :: paintCell (juce::Graphics& g, int rowNumber, int columnId,
 				int width, int height, bool rowIsSelected)
 {
-	int clSize = cl_AllClients->size();
-//	DBG("cl all clients size " + String(clSize));
-//	DBG("cl num rows " + String(mTable.getNumRows()));
-	auto rowElem = cl_ClientXml->getChildElement(clSize-1);
-	auto test = rowElem->getStringAttribute(getAttributeNameForColumnId (columnId));
-	DBG("last element " + String(test));
-	
 	g.setColour (rowIsSelected ? juce::Colours::darkblue : getLookAndFeel().findColour (juce::ListBox::textColourId));
 	g.setFont (font);
-	//DBG("paintCell - rowNum " + juce::String(rowNumber) + " colId " + juce::String(columnId));
 	
-
 	// might be inefficient, look into how to implement getNextElement()
 	if (auto rowElement = cl_ClientXml->getChildElement (rowNumber))
 	{
 		auto text = rowElement->getStringAttribute (getAttributeNameForColumnId (columnId));
-		
-		if (rowNumber == clSize - 1)
-			DBG("ROW TEXT " + text);
-		
+
 		g.drawText (text, 2, 0, width - 4, height, juce::Justification::centredLeft, true);
 	}
 
@@ -162,7 +150,6 @@ juce::String ClientList::getText (const int columnNumber, const int rowNumber) c
 
 void ClientList::setText(const int columnNumber, const int rowNumber, const juce::String& newText)
 {
-	DBG("CALLING SET TEXT");
 	const auto& columnName = mTable.getHeader().getColumnName (columnNumber);
 	cl_ClientXml->getChildElement (rowNumber)->setAttribute (columnName, newText);
 }
