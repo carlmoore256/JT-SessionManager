@@ -6,7 +6,7 @@
 //
 
 #include "Client.h"
-
+#include <stdio.h>
 
 // ===========================================
 
@@ -18,6 +18,8 @@ Client::Client(juce::String name, int port, int channels, bool autoConnectAudio,
 	mZeroUnderrun = zeroUnderrun;
 	mAutoManage = autoManage;
 
+	
+	cp = new ChildProcess();
 //	if (startOnCreate)
 	startServer();
 	
@@ -34,9 +36,9 @@ Client::~Client()
     DBG("JackTrip Stopped!");
 
     mClientServer->stopThread(500);
+	
+	delete cp;
 //    delete mClientServer;
-
-    DBG("CLIENT DESTRUCTOR END!");
 }
 
 bool Client::compareName(juce::String name)
@@ -64,7 +66,7 @@ juce::XmlElement* Client::getClientInfo()
 void Client::startServer()
 {
 	auto threadName = mName + "_proc";
-	mClientServer = new ClientServer(*this);
+	mClientServer = new ClientServer(*this, cp);
 	// starts the thread, which then runs run(), which will start the server childProcess
 	mClientServer->startThread();
 }
@@ -90,38 +92,42 @@ void Client::recordClientInfo()
 // ===========================================
 //const juce::String& threadName
 
-Client::ClientServer::ClientServer(Client& parentClient) : Thread("clientServer"), owner(parentClient)
+ClientServer::ClientServer(Client& parentClient, ChildProcess* cp) : Thread("clientServer"), owner(parentClient), mChildProcess(cp)
 {
     mSkew = 0;
+//	startJTprocess();
+//	String test = popenTest();
+//	DBG(owner.mName + " test popen op: " + test);
 }
 
 
-Client::ClientServer::~ClientServer()
+ClientServer::~ClientServer()
 {
 //	stopServer();
 }
 
-bool Client::ClientServer::isProcessRunning()
+bool ClientServer::isProcessRunning()
 {
-	return mChildProcess.isRunning();
+	return mChildProcess->isRunning();
 }
 
-void Client::ClientServer::run()
+void ClientServer::run()
 {
-	
-	if(threadShouldExit())
-	{
-		DBG("thread SHOULD exit");
-	} else {
-		DBG("thread SHOULD NOT exit");
-	}
-	
-	
 	while(!threadShouldExit())
 	{
 		if(!mJacktripRunning && mJacktripShouldRun)
 		{
-			mJacktripRunning = startServer();
+			mJacktripRunning = startJTprocess();
+//			if (mJacktripRunning)
+//			{
+//				DBG("M JACK TRIP IS RUNNING!");
+////				DBG(getProcessOutput());
+//			}
+			
+//			if (mChildProcess.isRunning())
+//			{
+//				DBG(owner.mName + " is running? ");
+//			}
 		}
 
 //        juce::String output = mChildProcess.readAllProcessOutput();
@@ -136,75 +142,111 @@ void Client::ClientServer::run()
 		}
          */
 //
-		wait(100);
-//		DBG(owner.mName + "output: " + getProcessOutput());
+//		if(mChildProcess.isRunning())
+		DBG(owner.mName + " thead running!");
+		DBG(owner.mName + " output: " + getProcessOutput());
+		
 //		add restart timeout stuff here
+		
+		wait(100);
 	}
-	
 //	stopServer();
+	DBG("\n THREAD EXITING!!! " + owner.mName + "\n");
 }
 
-float Client::ClientServer::calculateQuality()
+float ClientServer::calculateQuality()
 {
 	// build this up to calculate current quality
 	// look into how threading lib works beforehand, we dont want to call while memory is updated
 	return mQuality;
 }
 
-bool Client::ClientServer::stopJackTrip()
+bool ClientServer::stopJackTrip()
 {
-    return mChildProcess.kill();
+    return mChildProcess->kill();
 }
 
-String Client::ClientServer::getProcessOutput()
+String ClientServer::getProcessOutput()
 {
 	MemoryOutputStream result;
 	
-	for(int i = 0; i < 100; i++)
-	{
-		char buffer [512];
-		const int length = readProcessOutput(buffer, sizeof(buffer));
-//		DBG("len of buff " + length);
-	//	if(length <= 0)
-	//		return "";
-		result.write(buffer, length);
-	}
+//	for(int i=0;i<100;i++)
+//	{
+	char buffer [512];
+	const int length = mChildProcess->readProcessOutputNonblocking(&buffer, sizeof(buffer));
+
+	result.write(&buffer, length);
+//	}
 
 	return result.toString();
 }
 
-juce::String Client::ClientServer::generateCommand()
+juce::String ClientServer::generateCommand()
 {
-	// overly complicated bs I gotta figure out
-//	String nameNoSpaces = owner.mName.replaceCharacter(test.getCharPointer(), "");
+	String nameNoSpaces = owner.mName.removeCharacters(" ");
+	
 	juce::String command =
 	"/usr/local/bin/jacktrip"
 	" -n " + juce::String(owner.mChannels) +
 	" -s " +
-	"--clientname " + owner.mName +
+	"--clientname " + nameNoSpaces +
 	" -o " + juce::String(owner.mPort) +
 	" --iostat 1";
-	
-//	command = String("ls -a");
+//	DBG(command);
 	return command;
 }
 
 
-bool Client::ClientServer::startServer()
+bool ClientServer::startJTprocess()
 {
-	DBG("attempting to start server");
-	
-	if(mChildProcess.start (generateCommand(), wantStdOut | wantStdErr))
+	if(mChildProcess->start (generateCommand(), wantStdOut | wantStdErr))
 	{
+		DBG("\n " + owner.mName + " " + generateCommand() + "\n");
+		
+		String test = getProcessOutput();
+
+		DBG("\n" + owner.mName + " STARTED SERVER OUTPUT: " + test + " \n");
+
 		DBG("server opened");
 		mProcessRunning = true;
 		return true;
 	}
-	return false;
+	else
+	{
+		DBG("failed to start server for " + owner.mName);
+		return false;
+	}
+
 }
 
-void Client::ClientServer::stopServer()
+void ClientServer::stopJTprocess()
 {
 	DBG("stopping clientServer childProces (JT)");
-	mChildProcess.kill();
+	mChildProcess->kill();
+}
+
+String ClientServer::popenTest()
+{
+	auto command = generateCommand().toUTF8().getAddress();
+	DBG(String(command));
+	
+	FILE* pipe = popen(command, "r");
+	
+	if (!pipe)
+		return "nothing in pipe";
+	
+	char buffer[128];
+	String result = "";
+	
+	fgets(buffer, 128, pipe);
+	
+	result += String(buffer);
+	
+//	while(!feof(pipe))
+//	{
+		if(fgets(buffer, 128, pipe) != NULL)
+			result += String(buffer);
+//	}
+	pclose(pipe);
+	return result;
 }

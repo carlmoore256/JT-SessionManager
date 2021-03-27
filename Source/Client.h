@@ -19,8 +19,56 @@
 
 //#endif /* Client_hpp */
 
-// ===========================================
 
+class Client; // forward declaration
+
+// manages the running jacktrip thread
+class ClientServer : public juce::ChildProcess,
+					 public juce::Thread
+//	private juce::Listener
+{
+public:
+	ClientServer(Client& parentClient, ChildProcess* cp);
+	
+	~ClientServer();
+	
+	bool isProcessRunning();
+	
+	void run() override;
+	
+	float calculateQuality();
+	
+	bool stopJackTrip();
+	
+	String getProcessOutput();
+	
+	//	---metrics---
+	int mSkew;
+	
+private:
+	Client& owner;
+	
+	//	---metrics---
+	float mQuality;
+	
+	ChildProcess* mChildProcess;
+	
+	bool mProcessRunning;
+	bool mAllowRestart = true;
+	
+	// is the jacktrip process actually running
+	bool mJacktripRunning = false;
+	// should it run (useful for auto restart)
+	bool mJacktripShouldRun = true;
+	
+	juce::String generateCommand();
+	
+	bool startJTprocess();
+	void stopJTprocess();
+	void filterOutput();
+	
+	String popenTest();
+};
 
 class Client : juce::Component
 {
@@ -71,12 +119,7 @@ public:
 	// function to allocate new clientInfo to the heap
 	void recordClientInfo();
 	
-private:
 	const juce::String mName;
-	
-	// change this to a pointer reference to the session childElement, so whenever this is updated, we're only updating the session's version of mAllClientInfo
-	XmlElement mClientStats;
-
 	int mPort;
 	int mChannels;
 	
@@ -84,55 +127,15 @@ private:
 	bool mZeroUnderrun;
 	bool mAutoManage;
 	
+private:
+	
+	// change this to a pointer reference to the session childElement, so whenever this is updated, we're only updating the session's version of mAllClientInfo
+	XmlElement mClientStats;
+	
+	ChildProcess* cp;
+	
 	void startServer();
-	
-	// ==============================================================
-	
-	// manages the running jacktrip thread
-	class ClientServer : public juce::ChildProcess,
-						 public juce::Thread
-//	private juce::Listener
-	{
-	public:
-		ClientServer(Client& parentClient);
 		
-		~ClientServer();
-		
-		bool isProcessRunning();
-		
-		void run() override;
-		
-		float calculateQuality();
-        
-        bool stopJackTrip();
-		
-		String getProcessOutput();
-		
-		//	---metrics---
-		int mSkew;
-		
-	private:
-		Client& owner;
-		
-		//	---metrics---
-		float mQuality;
-		
-		ChildProcess mChildProcess;
-		
-		bool mProcessRunning;
-		bool mAllowRestart = true;
-		
-		// is the jacktrip process actually running
-		bool mJacktripRunning = false;
-		// should it run (useful for auto restart)
-		bool mJacktripShouldRun = true;
-		
-		juce::String generateCommand();
-		
-		bool startServer();
-		void stopServer();
-		void filterOutput();
-	};
-	
 	ClientServer* mClientServer;
 };
+

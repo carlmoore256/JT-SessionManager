@@ -10,7 +10,7 @@
 Session::Session(ClientListbox* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel(ip), sess_AllClientInfo("clientInfoXml-Session")
 {
 	mClientList->setInitPtrs(&sess_AllClients, &sess_AllClientInfo);
-	
+
 	//	acquire resource directory for loading and saving
 	auto locationType = juce::File::SpecialLocationType::currentApplicationFile;
 	auto dir = juce::File::getSpecialLocation(locationType);
@@ -22,18 +22,19 @@ Session::Session(ClientListbox* cl, InfoPanel* ip) : mClientList(cl), mInfoPanel
 	
 	//	load the table headers
 	loadTableHeaders(mResourceDir.getChildFile("TableHeaders.xml"));
+	
+	killJacktripProcesses();
+
 
 //	Make method to auto load last saved session
 //	UNCOMMENT loadSession TO LOAD WHOLE SESSION, just like this now to avoid heavier load on debugging
 //	loadSession(mResourceDir.getChildFile("SessionData.xml"));
 	
-	createClient("test1", 0, 1, true, true, true);
-	createClient("test2", 1, 1, true, true, true);
-	createClient("test3", 2, 1, true, true, true);
+	createClient("carl", 0, 1, true, true, true);
+	createClient("mark", 1, 1, true, true, true);
+	createClient("john", 2, 1, true, true, true);
 
 //	mClientList->setNumRows(sess_AllClients.size());
-	
-	DBG("LOADED SESSION");
 }
 
 Session::~Session()
@@ -65,6 +66,9 @@ void Session::saveSession()
 void Session::loadSession()
 {
 	DBG("Loading Session...");
+	
+	// kill existing processes
+	killJacktripProcesses();
 	
 	FileChooser fc("Load Session", mResourceDir);
 	
@@ -125,7 +129,7 @@ void Session::update()
 	mInfoPanel->updateDisplay(selectedClientInfo);
 	
 	
-	DBG(sess_AllClients[0]->getOutput());
+//	DBG(sess_AllClients[0]->getOutput());
 	
 	if (debugSessionUpdateTime)
 		DBG("update finished after " + String(Time::getHighResolutionTicks() - t1));
@@ -149,7 +153,11 @@ void Session::createClient(juce::String name, int port, int channels, bool autoC
 	
 	mClientList->setNumRows(sess_AllClients.size());
 	
-	DBG("NEW CLIENT " + name + " CREATED");
+	DBG("NEW CLIENT " + name + " CREATED \n");
+	
+	//	THIS IS NECESSARY FOR THREADS TO PLAY NICE WITH CHILDPROCESS
+	Time::waitForMillisecondCounter(Time::getMillisecondCounter() + 300);
+
 }
 
 void Session::freeClients()
@@ -220,4 +228,13 @@ void Session::broadcastClientUpdate()
 {
 	for(Client* client : sess_AllClients)
 		client->recordClientInfo(); // will update xmltree for clients part
+}
+
+void Session::killJacktripProcesses()
+{
+	ChildProcess killproc;
+	if(killproc.start ("killall jacktrip"))
+	{
+		DBG("killed all jacktrip instances");
+	}
 }

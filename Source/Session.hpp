@@ -18,7 +18,7 @@
 
 //#endif /* Session_hpp */s
 
-#define PORT_RNG_START 4464
+#define PORT_RNG_START 0
 
 
 
@@ -77,4 +77,7 @@ private:
 	
 	// requests clients to refresh their internal stats reported at sess_AllClientInfo
 	void broadcastClientUpdate();
+	
+	// kills all jacktrip daemons
+	void killJacktripProcesses();
 };
